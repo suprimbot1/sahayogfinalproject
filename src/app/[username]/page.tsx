@@ -4,12 +4,21 @@ import UserProfile from "@/models/UserProfile";
 import Link from "next/link";
 import { PublicTipClient } from "@/components/public/PublicTipClient";
 
-export default async function PublicPage({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = await params;
+export default async function PublicPage(props: { 
+  params: Promise<{ username: string }> 
+}) {
+  const { username } = await props.params;
+
+  if (!username) {
+    notFound();
+  }
+
   await dbConnect();
 
   // Find the profile based on the dynamic route username parameter
-  const profile = await UserProfile.findOne({ username: username });
+  const profile = await UserProfile.findOne({ 
+    username: String(username).toLowerCase() 
+  });
 
   if (!profile) {
     notFound();
