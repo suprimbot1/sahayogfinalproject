@@ -24,9 +24,12 @@ const PLATFORM_ICONS: Record<string, any> = {
   website: Globe,
 };
 
-export default async function PublicLinksPage({ params }: { params: Promise<{ username: string }> }) {
-  const resolvedParams = await params;
-  const username = resolvedParams?.username;
+export default async function PublicLinksPage(props: { 
+  params: Promise<{ username: string }> 
+}) {
+  const { username } = await props.params;
+
+  console.log(`[Bio Page] Server-side rendering for username:`, username);
   
   if (!username) {
     notFound();
@@ -34,10 +37,11 @@ export default async function PublicLinksPage({ params }: { params: Promise<{ us
 
   await dbConnect();
   
-  console.log(`[Bio Page] Loading profile for: ${username}`);
+  // Clean lookup
+  const identifier = String(username).toLowerCase();
   
   const profile = await UserProfile.findOne({ 
-    username: username?.toLowerCase() 
+    username: identifier 
   }).lean();
 
   if (!profile) {
