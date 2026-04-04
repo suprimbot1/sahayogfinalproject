@@ -24,10 +24,11 @@ const PLATFORM_ICONS: Record<string, any> = {
   website: Globe,
 };
 
-export default async function PublicLinksPage({ params }: { params: { username: string } }) {
+export default async function PublicLinksPage({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
   await dbConnect();
   
-  const profile = await UserProfile.findOne({ username: params.username.toLowerCase() }).lean();
+  const profile = await UserProfile.findOne({ username: username.toLowerCase() }).lean();
 
   if (!profile) {
     notFound();
