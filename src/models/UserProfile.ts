@@ -15,6 +15,7 @@ export interface IUserProfile extends Document {
     customBadWords: string[];
   };
   socialLinks: { platform: string; url: string }[];
+  bioLinks: { title: string; url: string; active: boolean; icon?: string }[];
 }
 
 const UserProfileSchema: Schema = new Schema(
@@ -36,6 +37,14 @@ const UserProfileSchema: Schema = new Schema(
       {
         platform: { type: String },
         url: { type: String },
+      },
+    ],
+    bioLinks: [
+      {
+        title: { type: String },
+        url: { type: String },
+        active: { type: Boolean, default: true },
+        icon: { type: String },
       },
     ],
     payoutDetails: {
