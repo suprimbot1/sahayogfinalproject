@@ -47,8 +47,8 @@ export async function triggerYouTubeChatAlert(creatorId: string, supporterName: 
     }
 
     // 4. Send Message to Chat
-    // Format: 🎉 {Tipper} tipped Rs. {Amount}! "{Message}" cr8.rs/jiggle
-    const alertText = `🎉 ${supporterName} tipped Rs. ${amount}! "${message || "No message"}" - sah-ayog.app`;
+    // Format: 🎉 {Tipper} tipped Rs. {Amount}! "{Message}" sahayoghost.vercel.app
+    const alertText = `🎉 ${supporterName} tipped Rs. ${amount}! "${message || "No message"}" - sahayoghost.vercel.app`;
 
     await youtube.liveChatMessages.insert({
       part: ["snippet"],

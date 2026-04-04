@@ -99,7 +99,7 @@ export default function OverlayPage() {
              This overlay needs a <strong>username</strong> to know which stream to watch. 
            </p>
            <div className="bg-slate-950 p-4 rounded-xl font-mono text-[11px] text-emerald-400 break-all">
-             http://localhost:3000/overlay?username=YOUR_NAME
+             {typeof window !== "undefined" ? window.location.origin : "https://sahayoghost.vercel.app"}/overlay?username=YOUR_NAME
            </div>
            <p className="text-xs text-slate-500">
              Replace <code>YOUR_NAME</code> with your unique Sahayog username.

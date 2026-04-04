@@ -12,6 +12,13 @@ export default function AlertsPage() {
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const soundInputRef = useRef<HTMLInputElement>(null);
+  const [baseUrl, setBaseUrl] = useState("http://localhost:3000");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseUrl(window.location.origin);
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "Base",
@@ -118,8 +125,8 @@ export default function AlertsPage() {
         <label className="text-sm font-semibold text-foreground">Widget URL</label>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 flex items-center gap-2 bg-background border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground w-full">
-            <span className="truncate flex-1">http://localhost:3000/overlay</span>
-            <Copy onClick={() => { navigator.clipboard.writeText("http://localhost:3000/overlay"); alert("Copied!"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
+            <span className="truncate flex-1 tracking-tight">{baseUrl}/overlay</span>
+            <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay`); alert("Copied!"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
             <EyeOff className="w-4 h-4 hover:text-foreground cursor-pointer shrink-0 ml-1" />
           </div>
           <button 

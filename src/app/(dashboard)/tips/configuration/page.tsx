@@ -13,6 +13,13 @@ export default function TipsConfigurationPage() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
+  const [baseUrl, setBaseUrl] = useState("sah-ayog.app");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setBaseUrl(window.location.host); // This will be "sahayoghost.vercel.app" or "localhost:3000"
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -155,7 +162,7 @@ export default function TipsConfigurationPage() {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 flex items-center gap-3 bg-white border border-border rounded-2xl px-5 py-3 text-[15px] font-bold text-foreground w-full shadow-sm">
             <span className="truncate flex-1 text-muted-foreground">
-               sah-ayog.app/<span className="text-foreground">{formData.username || "username"}</span>
+               {baseUrl}/<span className="text-foreground">{formData.username || "username"}</span>
             </span>
             <Copy onClick={handleCopy} className="w-4 h-4 ml-auto text-primary hover:scale-110 cursor-pointer transition-transform" />
           </div>
