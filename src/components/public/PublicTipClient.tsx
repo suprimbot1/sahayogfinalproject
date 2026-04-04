@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserProfile } from "@/models/UserProfile";
+import { IUserProfile } from "@/models/UserProfile";
 import { ChevronRight, ChevronLeft, Mail, Loader2 } from "lucide-react";
 
 export function PublicTipClient({ profile }: { profile: any }) {
