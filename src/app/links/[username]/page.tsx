@@ -5,8 +5,8 @@ import {
   Video as YoutubeIcon, 
   Camera as InstagramIcon, 
   MessageCircle,
-  Linkedin, 
-  Github, 
+  User as ProfileIcon, 
+  Code, 
   Globe, 
   ArrowRight,
   ExternalLink
@@ -19,8 +19,8 @@ const PLATFORM_ICONS: Record<string, any> = {
   twitter: Globe,
   x: Globe,
   facebook: MessageCircle,
-  linkedin: Linkedin,
-  github: Github,
+  linkedin: ProfileIcon,
+  github: Code,
   website: Globe,
 };
 
