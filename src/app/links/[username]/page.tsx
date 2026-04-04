@@ -25,7 +25,13 @@ const PLATFORM_ICONS: Record<string, any> = {
 };
 
 export default async function PublicLinksPage({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = await params;
+  const resolvedParams = await params;
+  const username = resolvedParams?.username;
+  
+  if (!username) {
+    notFound();
+  }
+
   await dbConnect();
   
   const profile = await UserProfile.findOne({ username: username.toLowerCase() }).lean();
