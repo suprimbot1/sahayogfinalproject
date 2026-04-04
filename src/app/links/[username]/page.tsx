@@ -34,7 +34,11 @@ export default async function PublicLinksPage({ params }: { params: Promise<{ us
 
   await dbConnect();
   
-  const profile = await UserProfile.findOne({ username: username.toLowerCase() }).lean();
+  console.log(`[Bio Page] Loading profile for: ${username}`);
+  
+  const profile = await UserProfile.findOne({ 
+    username: username?.toLowerCase() 
+  }).lean();
 
   if (!profile) {
     notFound();
@@ -63,7 +67,7 @@ export default async function PublicLinksPage({ params }: { params: Promise<{ us
             />
           ) : (
             <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-3xl font-black">
-              {profile.username.charAt(0).toUpperCase()}
+              {(profile.username || "U").charAt(0).toUpperCase()}
             </div>
           )}
         </div>
@@ -80,7 +84,8 @@ export default async function PublicLinksPage({ params }: { params: Promise<{ us
         {/* Social Icons */}
         <div className="flex flex-wrap justify-center gap-4 mb-10 w-full">
           {socialLinks.map((social: any, i: number) => {
-             const Icon = PLATFORM_ICONS[social.platform.toLowerCase()] || Globe;
+             const platformKey = (social.platform || "website").toLowerCase();
+             const Icon = PLATFORM_ICONS[platformKey] || Globe;
              return (
                <a 
                  key={i}
