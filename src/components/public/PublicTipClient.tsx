@@ -195,13 +195,14 @@ export function PublicTipClient({ profile }: { profile: any }) {
               {/* Email Input */}
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-foreground">Email (Optional)</label>
-                <div className="relative">
+                <div className="relative" suppressHydrationWarning>
                   <input 
                     type="email" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     className="w-full bg-transparent border border-border rounded-xl p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all pr-12"
+                    suppressHydrationWarning
                   />
                   <Mail className="w-5 h-5 text-primary absolute right-4 top-[14px]" />
                 </div>

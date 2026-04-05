@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import dbConnect from "@/lib/mongoose";
 import Transaction from "@/models/Transaction";
 import UserProfile from "@/models/UserProfile";
+import { initiateKhaltiPayment } from "@/lib/khalti";
 
 export async function GET(req: Request) {
   try {
@@ -80,56 +81,43 @@ export async function POST(req: Request) {
     });
 
     // 2. Initialize Khalti API
-    // Ensure we have a return URL, assuming localhost for dev environments. 
-    // In prod, use process.env.NEXT_PUBLIC_APP_URL
     const host = req.headers.get('host') || "localhost:3000";
     const protocol = host.includes("localhost") ? "http" : "https";
     const returnUrl = `${protocol}://${host}/api/khalti/callback`;
     
-    // Fallback secret for preventing crashes if .env is not yet set
-    const khaltiSecret = process.env.KHALTI_SECRET_KEY || "test_secret_key_xxxx";
-
-    const khaltiPayload = {
+    try {
+      const khaltiData = await initiateKhaltiPayment({
         return_url: returnUrl,
         website_url: `${protocol}://${host}`,
-        amount: amount * 100, // Khalti requires amount in Paisa (Rs * 100)
+        amount: amount,
         purchase_order_id: newTransaction._id.toString(),
-        purchase_order_name: `Tip for ${profile.username}`,
+        purchase_order_name: `Tip for @${profile.username}`,
         customer_info: {
-            name: supporterName,
-            email: email || "supporter@example.com",
-            phone: "9800000000",
+          name: supporterName,
+          email: email || "supporter@example.com",
+          phone: "9800000000", // Standard test phone
         }
-    };
+      });
 
-    const khaltiResponse = await fetch("https://a.khalti.com/api/v2/epayment/initiate/", {
-        method: "POST",
-        headers: {
-            "Authorization": `Key ${khaltiSecret}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(khaltiPayload)
-    });
+      // Save the pidx to our database for future reference
+      newTransaction.referenceId = khaltiData.pidx;
+      await newTransaction.save();
 
-    const khaltiData = await khaltiResponse.json();
-
-    if (!khaltiResponse.ok) {
-        console.error("Khalti Error Response:", khaltiData);
-        // Clean up pending transaction
-        await Transaction.findByIdAndDelete(newTransaction._id);
-        return NextResponse.json({ error: "Failed to initiate payment gateway", details: khaltiData }, { status: 502 });
-    }
-
-    // Save the pidx to our database for future reference
-    newTransaction.referenceId = khaltiData.pidx;
-    await newTransaction.save();
-
-    // 3. Send the secure payment URL back to the frontend so it can redirect the user
-    return NextResponse.json({ 
+      return NextResponse.json({ 
         success: true, 
         payment_url: khaltiData.payment_url,
         pidx: khaltiData.pidx
-    });
+      });
+
+    } catch (khaltiError: any) {
+      console.error("Khalti Init Failure:", khaltiError);
+      // Clean up the pending transaction if we couldn't even start the payment
+      await Transaction.findByIdAndDelete(newTransaction._id);
+      return NextResponse.json({ 
+        error: "Gateway error: " + (khaltiError.message || "Failed to initiate") 
+      }, { status: 502 });
+    }
+
   } catch (error: any) {
     console.error("POST Transaction Error:", error);
     return NextResponse.json({ error: error.message || "Failed to process tip" }, { status: 500 });

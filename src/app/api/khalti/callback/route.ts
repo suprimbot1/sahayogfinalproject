@@ -3,6 +3,7 @@ import dbConnect from "@/lib/mongoose";
 import Transaction from "@/models/Transaction";
 import UserProfile from "@/models/UserProfile";
 import { triggerYouTubeChatAlert } from "@/lib/youtube";
+import { verifyKhaltiPayment } from "@/lib/khalti";
 
 export async function GET(req: Request) {
   try {
@@ -35,44 +36,39 @@ export async function GET(req: Request) {
        return NextResponse.redirect(new URL(`/${username}?payment=cancelled`, req.url));
     }
 
-    // 2. Perform extreme security lookup to VERIFY the Khalti transaction (Server-Side)
-    const khaltiSecret = process.env.KHALTI_SECRET_KEY || "test_secret_key_xxxx";
-    
-    const lookupResponse = await fetch("https://a.khalti.com/api/v2/epayment/lookup/", {
-        method: "POST",
-        headers: {
-            "Authorization": `Key ${khaltiSecret}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ pidx })
-    });
+    // 2. Perform official lookup to VERIFY the Khalti transaction (Server-Side)
+    try {
+      const lookupData = await verifyKhaltiPayment(pidx);
 
-    const lookupData = await lookupResponse.json();
-
-    // 3. Verify Khalti says it's officially Completed
-    if (lookupResponse.ok && lookupData.status === "Completed") {
-        transaction.status = "COMPLETED";
-        
-        // Save the transaction reference ID sent from khalti just for record keeping
-        transaction.referenceId = lookupData.transaction_id || pidx; 
-        await transaction.save();
-        
-        // 4. Trigger YouTube Chat Alert
-        // We do this asynchronously so we don't delay the user redirect
-        triggerYouTubeChatAlert(
-            transaction.creatorId, 
-            transaction.supporter.name, 
-            transaction.financials.amountNPR, 
-            transaction.message
-        ).catch(err => console.error("YouTube Alert Trigger Failure:", err));
-        
-        // Successfully bounded. Later this is where you can trigger WebSockets to the overlay!
-        return NextResponse.redirect(new URL(`/${username}?payment=success`, req.url));
-    } else {
-        // Khalti lookup failed or indicates it was spoofed/fake
-        transaction.status = "FAILED";
-        await transaction.save();
-        return NextResponse.redirect(new URL(`/${username}?payment=failed`, req.url));
+      // 3. Verify Khalti says it's officially Completed
+      if (lookupData.status === "Completed") {
+          transaction.status = "COMPLETED";
+          
+          // Save the transaction reference ID sent from khalti just for record keeping
+          transaction.referenceId = lookupData.transaction_id || pidx; 
+          await transaction.save();
+          
+          // 4. Trigger YouTube Chat Alert
+          // We do this asynchronously so we don't delay the user redirect
+          triggerYouTubeChatAlert(
+              transaction.creatorId, 
+              transaction.supporter.name, 
+              transaction.financials.amountNPR, 
+              transaction.message
+          ).catch(err => console.error("YouTube Alert Trigger Failure:", err));
+          
+          return NextResponse.redirect(new URL(`/${username}?payment=success`, req.url));
+      } else {
+          // Khalti lookup failed or indicates it was spoofed/fake
+          transaction.status = "FAILED";
+          await transaction.save();
+          return NextResponse.redirect(new URL(`/${username}?payment=failed`, req.url));
+      }
+    } catch (verifyError: any) {
+      console.error("Khalti Verification Failure:", verifyError);
+      transaction.status = "FAILED";
+      await transaction.save();
+      return NextResponse.redirect(new URL(`/${username}?payment=error`, req.url));
     }
 
   } catch (error) {
