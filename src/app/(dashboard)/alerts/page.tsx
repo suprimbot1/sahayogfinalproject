@@ -206,6 +206,21 @@ export default function AlertsPage() {
                      </div>
 
                      <div className="flex flex-col gap-2 text-left">
+                        <div className="flex justify-between items-center">
+                           <span className="text-[10px] font-bold text-muted-foreground">Font Size</span>
+                           <span className="text-[10px] font-black text-primary">{formData.typography.fontSize}px</span>
+                        </div>
+                        <input 
+                          type="range" 
+                          min="12" 
+                          max="120" 
+                          value={formData.typography.fontSize}
+                          onChange={(e) => setFormData({...formData, typography: {...formData.typography, fontSize: parseInt(e.target.value)}})}
+                          className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                     </div>
+
+                     <div className="flex flex-col gap-2 text-left">
                         <span className="text-[10px] font-bold text-muted-foreground">Text Color</span>
                         <div className="flex items-center gap-3 bg-background border border-border p-2 rounded-xl">
                           <input 
@@ -313,7 +328,7 @@ export default function AlertsPage() {
                        <div 
                          className="font-black tracking-tighter drop-shadow-[0_8px_16px_rgba(0,0,0,0.8)] leading-[0.9]"
                          style={{ 
-                            fontSize: "40px", 
+                            fontSize: `${(formData.typography.fontSize || 48) * 0.7}px`, 
                             fontFamily: formData.typography.fontFamily,
                             textShadow: `0 4px 0 rgba(0,0,0,0.2), 0 0 20px ${formData.typography.color}40`,
                             color: '#ffffff'
