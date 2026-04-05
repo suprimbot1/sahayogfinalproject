@@ -33,7 +33,7 @@ export default async function PublicPage(props: {
       <header className="w-full bg-white border-b border-border py-4 px-8 flex items-center justify-between z-10 relative">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
-            c
+            S
           </div>
           <span className="font-bold text-xl tracking-tight text-primary">Sahayog</span>
         </Link>

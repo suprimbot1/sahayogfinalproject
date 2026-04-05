@@ -49,7 +49,7 @@ export default function DashboardPage() {
               </h2>
               <p className="text-xs text-muted-foreground">
                 Finish these steps to personalize your setup and start using
-                cr8rs smoothly.
+                Sahayog smoothly.
               </p>
             </div>
             <div className="flex items-center gap-3">

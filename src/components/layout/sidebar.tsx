@@ -134,14 +134,10 @@ export function Sidebar() {
       {/* Brand */}
       <div className="h-16 flex items-center px-6">
         <Link href="/" className="flex items-center gap-2">
-          {/* Mock Logo matching exact styling shape using CSS */}
-          <div className="flex items-center text-primary font-bold text-2xl tracking-tight">
-            <span>cr</span>
-            <span className="bg-primary text-background rounded-sm px-1 ml-0.5 mr-0.5 rotate-12">
-              8
-            </span>
-            <span>rs</span>
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
+            S
           </div>
+          <span className="font-bold text-xl tracking-tight text-primary">Sahayog</span>
         </Link>
       </div>
 
