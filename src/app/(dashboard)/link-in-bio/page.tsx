@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { 
   Plus, 
@@ -10,38 +10,49 @@ import {
   Copy, 
   Save, 
   Loader2, 
-  Eye, 
-  Settings, 
-  Link as LinkIcon,
-  CheckCircle,
-  GripVertical,
-  CircleCheck,
-  CircleAlert
+  Video as YoutubeIcon,
+  Camera as InstagramIcon,
+  MessageCircle as FacebookIcon,
+  User as ProfileIcon,
+  Code as GithubIcon,
+  ChevronDown,
+  X,
+  Zap,
+  Share2
 } from "lucide-react";
+
+// Social Platform Mapping (Fixed for lucide-react 1.7.0)
+const SOCIAL_LIST = [
+  { id: "facebook", name: "Facebook", icon: FacebookIcon },
+  { id: "instagram", name: "Instagram", icon: InstagramIcon },
+];
+
+function VideoIconPlaceholder(props: any) { return <YoutubeIcon {...props} /> }
 
 export default function LinkInBioPage() {
   const { data: session, status } = useSession();
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [newLink, setNewLink] = useState({ title: "", url: "" });
+  
+  // Link Editor State
   const [showAddForm, setShowAddForm] = useState(false);
+  const [newLink, setNewLink] = useState({ title: "", url: "" });
+  
+  // Social Link Editor State
+  const [editingSocial, setEditingSocial] = useState<string | null>(null);
+  const [socialValue, setSocialValue] = useState("");
 
-  // Initial Fetch
   useEffect(() => {
     if (status === "authenticated") {
       fetch("/api/profile")
         .then(res => res.json())
         .then(data => {
+          if (!data.bioLinks) data.bioLinks = [];
+          if (!data.socialLinks) data.socialLinks = [];
           setProfile(data);
           setIsLoading(false);
-        })
-        .catch(err => {
-          console.error("Fetch Error:", err);
-          setIsLoading(false);
         });
-    } else if (status === "unauthenticated") {
-      setIsLoading(false);
     }
   }, [status]);
 
@@ -53,14 +64,7 @@ export default function LinkInBioPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
-      const data = await res.json();
-      if (data.success) {
-        alert("Link in Bio saved successfully!");
-      } else {
-        alert(data.error || "Failed to save.");
-      }
-    } catch (err) {
-      alert("Error saving profile.");
+      if (res.ok) alert("Your Link-in-Bio has been updated! 🍹");
     } finally {
       setIsSaving(false);
     }
@@ -86,227 +90,245 @@ export default function LinkInBioPage() {
     setProfile({ ...profile, bioLinks: updatedLinks });
   };
 
-  const updateLink = (index: number, field: string, value: any) => {
-     const updatedLinks = [...(profile.bioLinks || [])];
-     updatedLinks[index][field] = value;
-     setProfile({ ...profile, bioLinks: updatedLinks });
+  // Social Link Logic
+  const openSocialEditor = (platformId: string) => {
+    const existing = profile.socialLinks.find((s: any) => s.platform === platformId);
+    setSocialValue(existing?.url || "");
+    setEditingSocial(platformId);
   };
 
-  if (isLoading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
+  const saveSocialLink = () => {
+    const updatedSocial = [...(profile.socialLinks || [])];
+    const index = updatedSocial.findIndex((s: any) => s.platform === editingSocial);
+    
+    if (socialValue.trim() === "") {
+      if (index !== -1) updatedSocial.splice(index, 1);
+    } else {
+      if (index !== -1) updatedSocial[index].url = socialValue;
+      else updatedSocial.push({ platform: editingSocial, url: socialValue });
+    }
+    
+    setProfile({ ...profile, socialLinks: updatedSocial });
+    setEditingSocial(null);
+  };
 
-  if (!profile) return <div className="p-12 text-center">Please log in to manage your link in bio.</div>;
+  if (isLoading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#008d4a]" /></div>;
 
-  const publicUrl = typeof window !== "undefined" ? `${window.location.host}/links/${profile.username}` : `sahayog.app/links/${profile.username}`;
+  const publicUrl = `sahayog.host/${profile.username}`;
 
   return (
-    <div className="flex flex-col xl:flex-row gap-8 min-h-[calc(100vh-10rem)] pb-20">
+    <div className="flex flex-col gap-6 max-w-[1400px] mx-auto min-h-screen bg-white pb-20 px-4 md:px-10">
       
-      {/* Left Settings Panel */}
-      <div className="flex-1 max-w-2xl bg-card rounded-3xl border border-border p-8 shadow-sm h-fit">
-        <div className="flex flex-col gap-10">
-          
-          {/* Header & Bio Section */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-black text-foreground tracking-tight">Profile Details</h2>
-              <button 
-                onClick={handleSave}
-                disabled={isSaving}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2 rounded-2xl flex items-center gap-2 transition-all disabled:opacity-50"
-              >
-                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Save Changes
-              </button>
-            </div>
-
-            <div className="flex items-start gap-4 p-5 bg-muted/5 rounded-3xl border border-border/50">
-              <div className="w-20 h-20 rounded-full border-2 border-primary/20 p-1 flex-shrink-0">
-                {profile.profileImage ? (
-                  <img src={profile.profileImage} alt={profile.username} className="w-full h-full rounded-full object-cover" />
-                ) : (
-                  <div className="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-2xl font-black text-slate-400">
-                    {profile.username.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className="flex-1 mt-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="font-black text-lg text-foreground">@{profile.username}</span>
-                  <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold uppercase tracking-widest border border-primary/20">Verified</span>
-                </div>
-                <textarea 
-                  value={profile.about || ""}
-                  onChange={(e) => setProfile({...profile, about: e.target.value})}
-                  placeholder="Share a short bio with your audience..."
-                  className="w-full bg-transparent text-sm text-slate-500 font-medium leading-relaxed resize-none focus:outline-none focus:text-foreground transition-colors min-h-[60px]"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Links Section */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between mb-2">
-               <h2 className="text-xl font-black text-foreground tracking-tight flex items-center gap-2">
-                 <LinkIcon className="w-5 h-5 text-primary" />
-                 Your Custom Links
-                </h2>
-                <div className="text-[10px] font-black text-muted-foreground bg-muted/30 px-3 py-1 rounded-full uppercase tracking-tighter">
-                  {profile.bioLinks?.length || 0} Links Added
-                </div>
-            </div>
-
-            <div className="space-y-4">
-              {profile.bioLinks?.map((link: any, i: number) => (
-                <div key={i} className="group relative bg-muted/5 border border-border hover:border-primary/20 rounded-3xl p-5 transition-all shadow-sm">
-                  <div className="flex items-start gap-4">
-                    <div className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 mt-2">
-                      <GripVertical className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1 space-y-3">
-                       <input 
-                         value={link.title}
-                         onChange={(e) => updateLink(i, "title", e.target.value)}
-                         className="w-full bg-transparent font-bold text-md text-foreground focus:outline-none placeholder:opacity-50"
-                         placeholder="Link Title (e.g. My Latest Video)"
-                       />
-                       <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-                         <Globe className="w-3.5 h-3.5" />
-                         <input 
-                           value={link.url}
-                           onChange={(e) => updateLink(i, "url", e.target.value)}
-                           className="flex-1 bg-transparent focus:outline-none focus:text-primary transition-colors"
-                           placeholder="https://yourlink.com"
-                         />
-                       </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                       <button 
-                         onClick={() => toggleLinkActive(i)}
-                         className={`w-10 h-6 rounded-full relative transition-colors ${link.active ? "bg-primary" : "bg-slate-200"}`}
-                       >
-                         <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${link.active ? "right-1" : "left-1"}`}></div>
-                       </button>
-                       <button 
-                         onClick={() => removeLink(i)}
-                         className="p-1 text-slate-300 hover:text-rose-500 transition-colors"
-                       >
-                         <Trash2 className="w-4 h-4" />
-                       </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {showAddForm ? (
-                <div className="bg-white border-2 border-primary/30 rounded-3xl p-6 shadow-xl space-y-4 animate-in fade-in slide-in-from-bottom-2">
-                   <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Label</label>
-                        <input 
-                          value={newLink.title}
-                          onChange={(e) => setNewLink({...newLink, title: e.target.value})}
-                          placeholder="My Discord"
-                          className="w-full bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary font-bold"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1">Destination URL</label>
-                        <input 
-                          value={newLink.url}
-                          onChange={(e) => setNewLink({...newLink, url: e.target.value})}
-                          placeholder="https://..."
-                          className="w-full bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                        />
-                      </div>
-                   </div>
-                   <div className="flex justify-end gap-3 pt-2">
-                      <button onClick={() => setShowAddForm(false)} className="px-5 py-2 text-sm font-bold text-slate-400 hover:text-slate-600">Cancel</button>
-                      <button onClick={addLink} className="bg-primary text-primary-foreground font-black px-8 py-2 rounded-xl text-sm shadow-lg hover:shadow-primary/20 transition-all">Add Link</button>
-                   </div>
-                </div>
-              ) : (
-                <button 
-                  onClick={() => setShowAddForm(true)}
-                  className="w-full py-4 border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 rounded-3xl flex items-center justify-center gap-3 transition-all group"
-                >
-                  <Plus className="w-5 h-5 text-slate-300 group-hover:text-primary transition-colors" />
-                  <span className="text-sm font-black text-slate-400 group-hover:text-primary tracking-tight transition-colors">Add New Link</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* Top Navbar Actions */}
+      <div className="flex items-center justify-end gap-3 w-full border-b border-gray-100 pb-4 pt-4">
+         <div className="hidden md:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 min-w-[320px]">
+            <Globe className="w-4 h-4 text-gray-400" />
+            <span className="text-sm font-bold text-gray-400">https://{publicUrl}</span>
+            <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
+         </div>
+         <div className="flex items-center gap-2">
+            <button onClick={() => { navigator.clipboard.writeText(publicUrl); alert("Copied Profile URL!"); }} className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+               <Copy className="w-4 h-4 text-gray-500" />
+            </button>
+            <button onClick={() => window.open(`/links/${profile.username}`)} className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+               <ExternalLink className="w-4 h-4 text-gray-500" />
+            </button>
+            <button onClick={handleSave} className="bg-[#008d4a] text-white px-8 py-2.5 rounded-lg font-black text-sm shadow-lg hover:bg-[#007a40] transition-all flex items-center gap-2">
+               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Share"}
+            </button>
+         </div>
       </div>
 
-      {/* Right Phone Preview Panel */}
-      <div className="xl:flex-1 flex flex-col items-center sticky top-24 h-fit">
+      <div className="flex flex-col lg:flex-row gap-16 mt-8">
         
-        {/* Mock Live URL Bar */}
-        <div className="w-full max-w-[320px] mb-8 group">
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-md border border-border rounded-2xl px-5 py-3 text-sm font-bold shadow-sm group-hover:border-primary/20 transition-all">
-            <span className="truncate flex-1 text-slate-400 font-medium">{publicUrl}</span>
-            <Copy 
-              onClick={() => { navigator.clipboard.writeText(publicUrl); alert("URL Copied!"); }}
-              className="w-4 h-4 text-slate-300 hover:text-primary cursor-pointer transition-colors" 
-            />
-          </div>
-        </div>
-
-        {/* Improved Phone Mockup Frame */}
-        <div className="relative w-[320px] h-[640px] bg-white border-[10px] border-slate-900 rounded-[3rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden shrink-0">
-          <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-50">
-             <div className="bg-slate-900 h-full w-24 rounded-b-2xl"></div>
-          </div>
-          
-          <div className="relative w-full h-full bg-[#0a1128] overflow-hidden flex flex-col pt-16 pb-8 px-5">
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.4)_1px,transparent_1px)]" style={{ backgroundSize: '16px 16px' }}></div>
-            
-            {/* Header */}
-            <div className="relative z-10 flex flex-col items-center text-center">
-              <div className="w-20 h-20 rounded-full border-2 border-indigo-400 p-1 bg-slate-900/50 backdrop-blur-md shadow-2xl mb-4">
+        {/* Editor Screen */}
+        <div className="flex-1 flex flex-col gap-12">
+           
+           {/* Profile Block */}
+           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
+              <div className="w-32 h-32 rounded-full bg-[#f0fcf7] flex items-center justify-center text-[#008d4a] text-5xl font-black border-4 border-white shadow-xl overflow-hidden">
                  {profile.profileImage ? (
-                   <img src={profile.profileImage} className="w-full h-full rounded-full object-cover" />
-                 ) : (
-                   <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl font-black text-white">
-                      {profile.username.charAt(0).toUpperCase()}
-                   </div>
+                   <img src={profile.profileImage} className="w-full h-full object-cover" />
+                 ) : profile.username.charAt(0).toUpperCase()}
+              </div>
+              <div className="flex-1 flex flex-col gap-6 text-center sm:text-left">
+                 <div>
+                    <h2 className="text-3xl font-black text-gray-900 tracking-tighter">@{profile.username}</h2>
+                    <input 
+                       type="text" 
+                       value={profile.slogan || ""} 
+                       onChange={(e) => setProfile({...profile, slogan: e.target.value})}
+                       className="text-lg font-bold text-gray-400 bg-transparent border-none focus:ring-0 p-0 w-full placeholder:opacity-30 mt-1"
+                       placeholder="A short bio about you"
+                    />
+                 </div>
+                 
+                 {/* Social Icons Row */}
+                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                    {SOCIAL_LIST.map((social) => {
+                       const isLinked = profile.socialLinks.some((s: any) => s.platform === social.id);
+                       return (
+                          <div key={social.id} className="relative group cursor-pointer" onClick={() => openSocialEditor(social.id)}>
+                             <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                               isLinked ? "bg-[#008d4a15] text-[#008d4a] border-2 border-[#008d4a20]" : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                             }`}>
+                                <social.icon className="w-[18px] h-[18px]" />
+                             </div>
+                             <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${
+                                isLinked ? "bg-emerald-500" : "bg-gray-300"
+                             }`}>
+                                <Plus className={`w-3 h-3 text-white ${isLinked ? "rotate-45" : ""}`} />
+                             </div>
+                          </div>
+                       );
+                    })}
+                 </div>
+
+                 {/* Inline Social Editor Popover */}
+                 {editingSocial && (
+                    <div className="bg-slate-900 rounded-2xl p-4 shadow-2xl flex items-center gap-3 animate-in slide-in-from-top-2 border border-slate-800">
+                       <span className="text-xs font-black text-emerald-400 uppercase tracking-widest">{editingSocial}:</span>
+                       <input 
+                         autoFocus
+                         value={socialValue}
+                         onChange={(e) => setSocialValue(e.target.value)}
+                         placeholder="Enter URL..."
+                         className="bg-slate-800 text-white text-sm px-3 py-2 rounded-xl flex-1 outline-none focus:ring-1 focus:ring-emerald-500"
+                       />
+                       <button onClick={saveSocialLink} className="bg-emerald-600 text-white p-2 rounded-xl"><CheckCircle className="w-4 h-4" /></button>
+                       <button onClick={() => setEditingSocial(null)} className="text-slate-400"><X className="w-4 h-4" /></button>
+                    </div>
                  )}
               </div>
-              <h3 className="text-lg font-black text-white tracking-tight">@{profile.username}</h3>
-              <p className="text-[11px] text-indigo-300 font-bold uppercase tracking-[0.2em] mt-1">{profile.slogan || "Creator"}</p>
-              <p className="text-slate-400 text-[10px] leading-relaxed line-clamp-2 px-4 mt-3">
-                {profile.about || "No bio yet."}
-              </p>
-            </div>
+           </div>
 
-            {/* Links Area */}
-            <div className="relative z-10 mt-8 flex flex-col gap-3 overflow-y-auto no-scrollbar pb-10">
-               {profile.bioLinks?.filter((l: any) => l.active).map((link: any, idx: number) => (
-                 <div key={idx} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-lg backdrop-blur-md animate-in fade-in zoom-in-95 duration-300">
-                    <span className="text-[13px] font-black text-white tracking-tight truncate">{link.title}</span>
-                    <ExternalLink className="w-3 h-3 text-indigo-400" />
-                 </div>
-               ))}
-               {(!profile.bioLinks || profile.bioLinks.filter((l: any) => l.active).length === 0) && (
-                 <div className="flex flex-col items-center justify-center py-10 opacity-30">
-                    <CircleAlert className="w-8 h-8 text-indigo-400 mb-2" />
-                    <span className="text-[10px] font-black uppercase text-indigo-300 tracking-widest">No active links</span>
-                 </div>
-               )}
-            </div>
+           {/* Big Green Primary Button */}
+           <button 
+             onClick={() => setShowAddForm(true)}
+             className="w-full bg-[#008d4a] text-white py-5 rounded-[24px] font-black text-xl flex items-center justify-center gap-3 shadow-xl shadow-emerald-500/10 hover:bg-[#007a40] transition-all hover:scale-[1.01] active:scale-[0.99]"
+           >
+              <Plus className="w-6 h-6 stroke-[4]" /> Add New Link
+           </button>
 
-            {/* Mock Footer */}
-            <div className="mt-auto relative z-10">
-              <div className="flex items-center justify-center gap-1 opacity-40">
-                <span className="text-[8px] font-black text-white tracking-widest uppercase">Sahayog Hub</span>
+           {/* Dynamic Links List */}
+           <div className="flex flex-col gap-5">
+              {profile.bioLinks?.length === 0 ? (
+                <div className="py-12 border-2 border-dashed border-gray-100 rounded-[32px] flex flex-col items-center justify-center opacity-30">
+                   <Zap className="w-8 h-8 mb-2" />
+                   <p className="text-sm font-bold uppercase tracking-widest leading-none">No custom links yet</p>
+                </div>
+              ) : profile.bioLinks.map((link: any, i: number) => (
+                <div key={i} className={`group bg-white border rounded-[32px] p-6 flex flex-col sm:flex-row items-center justify-between transition-all hover:shadow-2xl hover:shadow-emerald-500/5 ${link.active ? "border-gray-100" : "border-gray-200 grayscale opacity-60"}`}>
+                   <div className="flex items-center gap-6">
+                      <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-[#008d4a] transition-colors">
+                        <Globe className="w-6 h-6" />
+                      </div>
+                      <div className="flex flex-col">
+                         <span className="font-black text-lg text-gray-900 tracking-tight">{link.title || "Untitled Link"}</span>
+                         <span className="text-xs font-bold text-gray-400 truncate max-w-[200px]">{link.url}</span>
+                      </div>
+                   </div>
+                   <div className="flex items-center gap-6 mt-4 sm:mt-0">
+                      <button onClick={() => removeLink(i)} className="text-gray-200 hover:text-rose-500 transition-colors p-2"><Trash2 className="w-5 h-5" /></button>
+                      <button 
+                        onClick={() => toggleLinkActive(i)}
+                        className={`w-12 h-7 rounded-full relative transition-all ${link.active ? "bg-[#008d4a]" : "bg-gray-200"}`}
+                      >
+                         <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all shadow-sm ${link.active ? "right-1" : "left-1"}`}></div>
+                      </button>
+                   </div>
+                </div>
+              ))}
+           </div>
+
+           {/* Add Link Form Modal-ish */}
+           {showAddForm && (
+              <div className="bg-white border-4 border-emerald-500/10 rounded-[40px] p-8 shadow-[0_50px_100px_rgba(0,0,0,0.1)] space-y-6 animate-in zoom-in-95">
+                 <div className="flex flex-col gap-4">
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Link Label</label>
+                       <input value={newLink.title} onChange={e => setNewLink({...newLink, title: e.target.value})} placeholder="e.g. Subscribe on YouTube" className="bg-gray-50 p-5 rounded-[22px] font-bold text-lg focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
+                    </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Destination URL</label>
+                       <input value={newLink.url} onChange={e => setNewLink({...newLink, url: e.target.value})} placeholder="https://..." className="bg-gray-50 p-5 rounded-[22px] font-medium text-md focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
+                    </div>
+                 </div>
+                 <div className="flex justify-end gap-3 pt-4">
+                    <button onClick={() => setShowAddForm(false)} className="text-gray-400 font-black px-6 text-sm">Cancel</button>
+                    <button onClick={addLink} className="bg-[#008d4a] shadow-lg shadow-emerald-500/20 text-white px-12 py-3 rounded-[18px] font-black">Add to Bio</button>
+                 </div>
               </div>
-            </div>
+           )}
 
-          </div>
         </div>
-      </div>
 
+        {/* Right: Phone Preview (Dynamic Content) */}
+        <div className="xl:w-[480px] flex justify-center sticky top-8 h-fit">
+           <div className="relative w-[340px] h-[700px] border-[14px] border-gray-900 rounded-[3.5rem] shadow-[0_50px_120px_-30px_rgba(0,0,0,0.4)] overflow-hidden shrink-0 ring-4 ring-[#008d4a10]">
+              
+              {/* Dynamic Galaxy Content */}
+              <div className="relative w-full h-full bg-[#030a06] overflow-hidden flex flex-col items-center pt-24 pb-12 px-6 text-center">
+                 <div className="absolute inset-0 opacity-40 bg-[radial-gradient(white_1.2px,transparent_1.2px)]" style={{ backgroundSize: '24px 24px' }}></div>
+                 <div className="absolute inset-0 bg-gradient-to-b from-[#008d4a20] to-transparent"></div>
+
+                 {/* Dynamic Avatar */}
+                 <div className="relative z-10 w-24 h-24 rounded-full bg-white border-4 border-white shadow-2xl flex flex-col items-center justify-center overflow-hidden">
+                    {profile.profileImage ? (
+                      <img src={profile.profileImage} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-[#008d4a] text-4xl font-black">{profile.username.charAt(0).toUpperCase()}</span>
+                    )}
+                 </div>
+
+                 {/* Dynamic Name and Slogan */}
+                 <h3 className="relative z-10 text-2xl font-black text-[#bcfc01] tracking-tighter mt-6 mb-1">@{profile.username}</h3>
+                 <p className="relative z-10 text-[10px] text-white/50 font-bold uppercase tracking-[0.3em]">{profile.slogan || "Sahayog Platform"}</p>
+                 
+                 {/* Dynamic Social Icons in Preview */}
+                 <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 mt-6 mb-8">
+                    {profile.socialLinks?.map((social: any, i: number) => {
+                       const platform = SOCIAL_LIST.find(p => p.id === social.platform) || SOCIAL_LIST[0];
+                       return (
+                          <div key={i} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/5 backdrop-blur-md">
+                             <platform.icon className="w-[18px] h-[18px] text-[#bcfc01]" />
+                          </div>
+                       );
+                    })}
+                 </div>
+
+                 {/* Dynamic Active Links */}
+                 <div className="relative z-10 w-full flex flex-col gap-4 max-h-[220px] overflow-hidden">
+                    {profile.bioLinks?.filter((l: any) => l.active).map((link: any, i: number) => (
+                      <div key={i} className="w-full bg-white/5 backdrop-blur-xl border border-white/5 rounded-2xl p-4 flex items-center justify-between shadow-lg transform scale-100 hover:scale-[1.02] transition-transform">
+                         <span className="text-sm font-black text-white tracking-tight">{link.title}</span>
+                         <ArrowRightIconPlaceholder className="w-4 h-4 text-[#bcfc01]" />
+                      </div>
+                    ))}
+                 </div>
+
+                 {/* Mock UI elements */}
+                 <div className="absolute top-8 right-8 z-20">
+                    <Share2 className="w-5 h-5 text-white/40" />
+                 </div>
+                 <div className="absolute top-8 left-8 z-20">
+                   <div className="text-xl font-black text-[#bcfc01] tracking-tighter italic mr-1">Sahayog<span className="text-white">.</span></div>
+                 </div>
+
+                 {/* Footer Static links */}
+                 <div className="mt-auto z-10 flex items-center gap-3 text-[10px] font-black text-white/20 uppercase tracking-[0.2em] pointer-events-none">
+                    <span>Terms</span>
+                    <div className="w-1 h-1 rounded-full bg-white/10"></div>
+                    <span>Privacy</span>
+                 </div>
+              </div>
+           </div>
+        </div>
+
+      </div>
     </div>
   );
 }
+
+function ArrowRightIconPlaceholder(props: any) { return <ExternalLink {...props} /> }
+function CheckCircle(props: any) { return <Save {...props} /> }

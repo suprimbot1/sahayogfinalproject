@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/mongoose";
 import UserProfile from "@/models/UserProfile";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+export const dynamic = "force-dynamic";
 import { 
   Video as YoutubeIcon, 
   Camera as InstagramIcon, 
@@ -37,8 +39,8 @@ export default async function PublicLinksPage(props: {
 
   await dbConnect();
   
-  // Clean lookup
-  const identifier = String(username).toLowerCase();
+  // Standardize identifier lookup (strip special characters to match API sanitization)
+  const identifier = String(username).toLowerCase().replace(/[^a-z0-9]/g, "");
   
   const profile = await UserProfile.findOne({ 
     username: identifier 
@@ -133,21 +135,20 @@ export default async function PublicLinksPage(props: {
           )}
         </div>
 
-        {/* Footer Brand */}
-        <div className="mt-20 flex flex-col items-center gap-4">
-           <div className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
-              <span className="text-[10px] font-black tracking-[0.2em] uppercase">Powered by</span>
-              <div className="text-xl font-black tracking-tight flex items-center">
-                sah<span className="bg-indigo-600 text-white rounded-[4px] px-1 mx-[2px] -rotate-3">ayog</span>
-              </div>
-           </div>
-           <button 
-             className="text-xs text-indigo-400/60 hover:text-indigo-400 font-bold tracking-tight bg-indigo-500/5 px-4 py-2 rounded-full border border-indigo-500/10"
-             onClick={() => window.location.href = '/'}
-           >
-             Create your own link-in-bio
-           </button>
-        </div>
+         <div className="mt-20 flex flex-col items-center gap-4">
+            <div className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
+               <span className="text-[10px] font-black tracking-[0.2em] uppercase">Powered by</span>
+               <div className="text-xl font-black tracking-tight flex items-center">
+                 sah<span className="bg-indigo-600 text-white rounded-[4px] px-1 mx-[2px] -rotate-3">ayog</span>
+               </div>
+            </div>
+            <Link 
+              href="/"
+              className="text-xs text-indigo-400/60 hover:text-indigo-400 font-bold tracking-tight bg-indigo-500/5 px-4 py-2 rounded-full border border-indigo-500/10 transition-colors"
+            >
+              Create your own link-in-bio
+            </Link>
+         </div>
 
       </div>
 
