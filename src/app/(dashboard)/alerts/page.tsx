@@ -13,6 +13,7 @@ export default function AlertsPage() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const soundInputRef = useRef<HTMLInputElement>(null);
   const [baseUrl, setBaseUrl] = useState("http://localhost:3000");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -36,6 +37,13 @@ export default function AlertsPage() {
   // Fetch from DB
   useEffect(() => {
     if (status === "authenticated") {
+      // Get the custom username for the widget URL
+      fetch("/api/profile")
+        .then(res => res.json())
+        .then(data => {
+          if (data?.username) setUsername(data.username);
+        });
+
       fetch("/api/alerts/config")
         .then(res => res.json())
         .then(data => {
@@ -125,8 +133,8 @@ export default function AlertsPage() {
         <label className="text-sm font-semibold text-foreground">Widget URL</label>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 flex items-center gap-2 bg-background border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground w-full">
-            <span className="truncate flex-1 tracking-tight">{baseUrl}/overlay</span>
-            <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay`); alert("Copied!"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
+            <span className="truncate flex-1 tracking-tight">{baseUrl}/overlay?username={username || "YOUR_NAME"}</span>
+            <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay?username=${username}`); alert("Copied!"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
             <EyeOff className="w-4 h-4 hover:text-foreground cursor-pointer shrink-0 ml-1" />
           </div>
           <button 
@@ -137,7 +145,7 @@ export default function AlertsPage() {
              Test Alert
           </button>
           <button 
-             onClick={() => window.open("/overlay", "Overlay", "width=1280,height=720")}
+             onClick={() => window.open(`/overlay?username=${username}`, "Overlay", "width=1280,height=720")}
              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-2.5 rounded-full transition-colors"
           >
             Launch Alert Box
