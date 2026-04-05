@@ -46,13 +46,43 @@ export async function GET() {
     ]);
     const todaysEarnings = todayAgg.length > 0 ? todayAgg[0].total : 0;
 
+    // 4. Calculate Chart Data (Daily for last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const chartAgg = await Transaction.aggregate([
+        { $match: { creatorId: userId, status: "COMPLETED", createdAt: { $gte: sevenDaysAgo } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+            amount: { $sum: "$financials.netAmountNPR" }
+          }
+        },
+        { $sort: { _id: 1 } }
+    ]);
+
+    // Fill gaps for missing days (with zero earnings)
+    const chartDataMap = new Map(chartAgg.map(item => [item._id, item.amount]));
+    const chartData = [];
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(sevenDaysAgo);
+        d.setDate(d.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+        chartData.push({
+            date: dateStr,
+            amount: chartDataMap.get(dateStr) || 0
+        });
+    }
+
     return NextResponse.json({
       success: true,
       stats: {
         totalEarnings,
         grossEarnings,
         todaysEarnings,
-        currentBalance
+        currentBalance,
+        chartData
       }
     });
 

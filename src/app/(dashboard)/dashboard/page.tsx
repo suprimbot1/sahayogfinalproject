@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, ChevronUp, EyeOff, Info, Activity, Heart } from "lucide-react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import EarningsChart from "@/components/dashboard/EarningsChart";
+import Link from "next/link";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<any>({
     totalEarnings: 0,
     todaysEarnings: 0,
-    currentBalance: 0
+    currentBalance: 0,
+    chartData: []
   });
 
   useEffect(() => {
@@ -215,8 +218,12 @@ export default function DashboardPage() {
             <option value="monthly">monthly</option>
           </select>
         </div>
-        <div className="flex-1 flex items-center justify-center border-t border-dashed border-border mt-4">
-          <p className="text-muted-foreground text-sm">No data available</p>
+        <div className="flex-1 flex items-center justify-center border-t border-dashed border-border mt-4 pt-6">
+          {stats.chartData && stats.chartData.length > 0 ? (
+            <EarningsChart data={stats.chartData} />
+          ) : (
+            <p className="text-muted-foreground text-sm">No data available for the last 7 days.</p>
+          )}
         </div>
       </div>
     </div>
