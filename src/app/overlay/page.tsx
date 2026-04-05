@@ -175,27 +175,27 @@ export default function OverlayPage() {
               </div>
             )}
 
-            {/* 1. LAYER: PERSISTENT BROADCAST BAR (HALL OF FAME) - RESPONSIVE */}
-            <div className="absolute bottom-12 left-0 right-0 px-6 sm:px-12 flex flex-col items-center">
-               <div className="w-full max-w-2xl flex flex-col gap-4">
-                  <div className="flex items-center gap-3 mb-2 px-6">
+            {/* 1. LAYER: PERSISTENT BROADCAST BAR (HALL OF FAME) - FIXED DIMENSIONS */}
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center">
+               <div className="w-[480px] h-[330px] p-[10px] bg-slate-950/20 backdrop-blur-md rounded-[32px] border border-white/5 flex flex-col gap-3">
+                  <div className="flex items-center gap-3 mb-1 px-4 pt-2">
                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_#10b981]"></div>
-                     <span className="text-[10px] font-black uppercase tracking-[0.6em] text-white/30 italic">Sahayog Activity</span>
+                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 italic">Sahayog Activity</span>
                   </div>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="flex flex-col gap-2 overflow-hidden">
                      {recentTips.map((tip, i) => (
                         <div 
                           key={tip.id || i}
-                          className="bg-gradient-to-r from-[#0a1128]/90 to-[#060b1d]/90 backdrop-blur-3xl border border-white/5 rounded-2xl py-4 px-8 flex items-center justify-between shadow-2xl animate-in fade-in slide-in-from-left-10 duration-700"
-                          style={{ animationDelay: `${i * 150}ms` }}
+                          className="bg-gradient-to-r from-[#0a1128]/90 to-[#060b1d]/90 backdrop-blur-2xl border border-white/5 rounded-2xl py-3 px-6 flex items-center justify-between shadow-xl animate-in fade-in slide-in-from-left-5 duration-500"
+                          style={{ animationDelay: `${i * 100}ms` }}
                         >
-                           <div className="flex items-center gap-4 min-w-0">
+                           <div className="flex items-center gap-3 min-w-0">
                               <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 shadow-[0_0_15px_rgba(99,102,241,0.8)]"></div>
-                              <span className="font-black text-white text-lg sm:text-xl tracking-tighter uppercase italic truncate">{tip.supporter}</span>
+                              <span className="font-black text-white text-base tracking-tighter uppercase italic truncate">{tip.supporter}</span>
                            </div>
                            <div className="flex items-baseline gap-2 shrink-0">
-                              <span className="text-[10px] font-black text-white/30 uppercase tracking-widest leading-none">Rs.</span>
-                              <span className="font-black text-[#d4af37] text-xl sm:text-2xl tracking-tighter drop-shadow-2xl">{tip.amount}</span>
+                              <span className="text-[9px] font-black text-white/30 uppercase tracking-widest leading-none">Rs.</span>
+                              <span className="font-black text-[#d4af37] text-xl tracking-tighter drop-shadow-2xl">{tip.amount}</span>
                            </div>
                         </div>
                      ))}
