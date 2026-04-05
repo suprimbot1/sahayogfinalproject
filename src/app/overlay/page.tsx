@@ -165,13 +165,9 @@ export default function OverlayPage() {
         {!isAudioEnabled && (
           <div 
             onClick={unlockAudio}
-            className="absolute inset-x-0 bottom-0 top-0 z-[9999] flex flex-col items-center justify-center bg-black/10 backdrop-blur-[1px] hover:bg-black/20 transition-all cursor-pointer pointer-events-auto group"
+            className="absolute inset-x-0 bottom-0 top-0 z-[9999] flex flex-col items-center justify-center bg-transparent transition-all cursor-pointer pointer-events-auto group"
           >
              <div className="flex flex-col items-center gap-6 group-active:scale-95 transition-transform duration-300">
-                <div className="relative">
-                   <div className="absolute inset-0 bg-primary/20 blur-[32px] rounded-full animate-ping opacity-50"></div>
-                   <Volume2 className="w-12 h-12 text-white/50 group-hover:text-white transition-colors" />
-                </div>
                 <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white/40 group-hover:text-white/80 transition-colors animate-pulse">
                    Tap Anywhere to Sync Audio
                 </span>
@@ -191,9 +187,9 @@ export default function OverlayPage() {
               </div>
             )}
 
-            {/* 1. LAYER: PERSISTENT BROADCAST BAR (HALL OF FAME) - FIXED DIMENSIONS */}
+            {/* 1. LAYER: PERSISTENT BROADCAST BAR (HALL OF FAME) - TRANSPARENT VERSION */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center">
-               <div className="w-[480px] h-[330px] p-[10px] bg-slate-950/20 backdrop-blur-md rounded-[32px] border border-white/5 flex flex-col gap-3">
+               <div className="w-[480px] h-[330px] p-[10px] flex flex-col gap-3">
                   <div className="flex items-center gap-3 mb-1 px-4 pt-2">
                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_#10b981]"></div>
                      <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 italic">Sahayog Activity</span>
