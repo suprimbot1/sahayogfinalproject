@@ -13,14 +13,21 @@ export default function OverlayPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "error">("connecting");
   const [showStatus, setShowStatus] = useState(true);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const usernameParam = searchParams?.get("username");
 
-  useEffect(() => {
+  const unlockAudio = () => {
+    // Play silent buffer to unlock the browser's audio context
+    const silentAudio = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFWmZtdCABAAAAAQAA8F9AAEBfQAAHAAIAQBCAAACAAAAAAAgAZGF0YAgAAAAAAAgAAAA=");
+    silentAudio.play().catch(() => {});
+    setIsAudioEnabled(true);
+  };
 
+  useEffect(() => {
     async function initOverlay() {
       try {
         let creatorId: string | null = null;
@@ -154,6 +161,24 @@ export default function OverlayPage() {
         style={{ fontFamily: config?.typography?.fontFamily || 'Inter' }}
       >
         
+        {/* SLEEK "TAP TO SYNC" AUDIO OVERLAY (Professional / Transparent) */}
+        {!isAudioEnabled && (
+          <div 
+            onClick={unlockAudio}
+            className="absolute inset-x-0 bottom-0 top-0 z-[9999] flex flex-col items-center justify-center bg-black/10 backdrop-blur-[1px] hover:bg-black/20 transition-all cursor-pointer pointer-events-auto group"
+          >
+             <div className="flex flex-col items-center gap-6 group-active:scale-95 transition-transform duration-300">
+                <div className="relative">
+                   <div className="absolute inset-0 bg-primary/20 blur-[32px] rounded-full animate-ping opacity-50"></div>
+                   <Volume2 className="w-12 h-12 text-white/50 group-hover:text-white transition-colors" />
+                </div>
+                <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white/40 group-hover:text-white/80 transition-colors animate-pulse">
+                   Tap Anywhere to Sync Audio
+                </span>
+             </div>
+          </div>
+        )}
+
         <div className="pointer-events-none h-full w-full relative flex items-center justify-center">
             
             {/* Connection Status */}
