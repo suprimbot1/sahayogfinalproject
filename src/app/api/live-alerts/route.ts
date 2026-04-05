@@ -33,17 +33,12 @@ export async function GET(req: Request) {
       const changeStream = Transaction.watch([
         {
           $match: {
-            "operationType": "insert",
-            "fullDocument.creatorId": userId,
-            "fullDocument.status": "COMPLETED"
+            $or: [
+              { "operationType": "insert", "fullDocument.status": "COMPLETED" },
+              { "operationType": "update", "updateDescription.updatedFields.status": "COMPLETED" }
+            ],
+            "fullDocument.creatorId": userId
           }
-        },
-        {
-           // We can also watch for updates (e.g. status changed from PENDING to COMPLETED)
-           $match: {
-             "operationType": "update",
-             "updateDescription.updatedFields.status": "COMPLETED"
-           }
         }
       ], { fullDocument: "updateLookup" });
 
