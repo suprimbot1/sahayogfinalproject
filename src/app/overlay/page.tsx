@@ -13,21 +13,14 @@ export default function OverlayPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "error">("connecting");
   const [showStatus, setShowStatus] = useState(true);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const usernameParam = searchParams?.get("username");
 
-  const unlockAudio = () => {
-    // Play a tiny base64 silent mp3 to "properly" unlock the audio context
-    const silentAudio = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFWmZtdCABAAAAAQAA8F9AAEBfQAAHAAIAQBCAAACAAAAAAAgAZGF0YAgAAAAAAAgAAAA=");
-    silentAudio.play().catch(() => {});
-    setIsAudioEnabled(true);
-  };
-
   useEffect(() => {
+
     async function initOverlay() {
       try {
         let creatorId: string | null = null;
@@ -161,19 +154,6 @@ export default function OverlayPage() {
         style={{ fontFamily: config?.typography?.fontFamily || 'Inter' }}
       >
         
-        {/* Audio Unlock Interaction (Crucial for OBS Sound) */}
-        {!isAudioEnabled && (
-          <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/10 backdrop-blur-[2px] pointer-events-auto">
-             <button 
-               onClick={unlockAudio}
-               className="bg-indigo-600 hover:bg-indigo-500 text-white font-black px-10 py-5 rounded-[32px] shadow-2xl flex items-center gap-4 animate-bounce transition-all active:scale-95"
-             >
-                <Volume2 className="w-6 h-6" />
-                <span>ENABLE OVERLAY AUDIO</span>
-             </button>
-          </div>
-        )}
-
         <div className="pointer-events-none h-full w-full relative flex items-center justify-center">
             
             {/* Connection Status */}
