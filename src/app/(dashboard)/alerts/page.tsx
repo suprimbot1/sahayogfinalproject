@@ -145,14 +145,14 @@ export default function AlertsPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left Settings Column */}
-        <div className="xl:col-span-4 flex flex-col gap-6">
+        {/* Left Settings Column (60%) */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
           
           {/* Widget URL Section */}
-          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex flex-col gap-4">
-            <h2 className="text-sm font-black uppercase tracking-widest text-muted-foreground">OBS Widget URL</h2>
+          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex flex-col gap-4 text-left">
+            <h2 className="text-sm font-black uppercase tracking-widest text-muted-foreground text-left">OBS Widget URL</h2>
             <div className="flex items-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm group">
                <span className="truncate flex-1 text-muted-foreground">{baseUrl}/overlay?username={username}</span>
                <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay?username=${username}`); alert("URL Copied!"); }} className="w-4 h-4 ml-auto hover:text-primary cursor-pointer transition-colors" />
@@ -165,58 +165,65 @@ export default function AlertsPage() {
             </button>
           </div>
 
-          <div className="bg-card border border-border rounded-3xl p-8 flex flex-col gap-8 shadow-sm">
-            <div className="flex items-center gap-3 border-b border-border pb-4">
+          <div className="bg-card border border-border rounded-3xl p-8 flex flex-col gap-8 shadow-sm text-left">
+            <div className="flex items-center gap-3 border-b border-border pb-4 w-full">
                <Square className="w-5 h-5 text-primary" />
                <h2 className="text-lg font-black uppercase tracking-tight">Appearance</h2>
             </div>
             
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Alert GIF/Image</label>
-              <input type="file" className="hidden" ref={imageInputRef} onChange={(e) => e.target.files?.[0] && uploadMedia(e.target.files[0], "image")} />
-              <div className="flex flex-col gap-3">
-                 <div className="w-full aspect-square bg-slate-100 rounded-3xl border-2 border-dashed border-border flex items-center justify-center overflow-hidden cursor-pointer group hover:border-primary transition-all" onClick={() => imageInputRef.current?.click()}>
-                    {formData.media.imageUri ? (
-                       <img src={formData.media.imageUri} className="w-full h-full object-contain" alt="Preview GIF" />
-                    ) : (
-                       <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                          <Upload className="w-8 h-8 group-hover:text-primary" />
-                          <span className="text-[10px] font-black uppercase italic">Upload GIF</span>
-                       </div>
-                    )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="flex flex-col gap-2 text-left">
+                 <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Alert GIF/Image</label>
+                 <input type="file" className="hidden" ref={imageInputRef} onChange={(e) => e.target.files?.[0] && uploadMedia(e.target.files[0], "image")} />
+                 <div className="flex flex-col gap-3">
+                    <div className="w-full aspect-square bg-slate-100 rounded-3xl border-2 border-dashed border-border flex items-center justify-center overflow-hidden cursor-pointer group hover:border-primary transition-all" onClick={() => imageInputRef.current?.click()}>
+                       {formData.media.imageUri ? (
+                          <img src={formData.media.imageUri} className="w-full h-full object-contain" alt="Preview GIF" />
+                       ) : (
+                          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                             <Upload className="w-8 h-8 group-hover:text-primary" />
+                             <span className="text-[10px] font-black uppercase italic">Upload GIF</span>
+                          </div>
+                       )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground text-center font-bold px-4">Transparent GIF or 512px PNG</p>
                  </div>
-                 <p className="text-[10px] text-muted-foreground text-center font-bold px-4">Recommended: Transparent GIF or 512x512 PNG</p>
-              </div>
+               </div>
+
+               <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-4">
+                     <label className="text-xs font-black uppercase tracking-widest text-muted-foreground text-left">Typography</label>
+                     
+                     <div className="flex flex-col gap-2 text-left">
+                        <span className="text-[10px] font-bold text-muted-foreground">Font Family</span>
+                        <select 
+                          value={formData.typography.fontFamily}
+                          onChange={(e) => setFormData({...formData, typography: {...formData.typography, fontFamily: e.target.value}})}
+                          className="w-full bg-background border border-border rounded-xl p-3 text-sm font-black focus:outline-none"
+                        >
+                          {fonts.map(f => <option key={f} value={f}>{f}</option>)}
+                        </select>
+                     </div>
+
+                     <div className="flex flex-col gap-2 text-left">
+                        <span className="text-[10px] font-bold text-muted-foreground">Text Color</span>
+                        <div className="flex items-center gap-3 bg-background border border-border p-2 rounded-xl">
+                          <input 
+                             type="color" 
+                             value={formData.typography.color}
+                             onChange={(e) => setFormData({...formData, typography: {...formData.typography, color: e.target.value}})}
+                             className="w-10 h-10 rounded-lg border-2 border-border cursor-pointer bg-transparent overflow-hidden" 
+                          />
+                          <span className="text-xs font-black uppercase italic">{formData.typography.color}</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
             </div>
 
             <div className="flex flex-col gap-4 pt-4 border-t border-border">
-               <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Typography</label>
-               
-               <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-bold text-muted-foreground">Font Family</span>
-                  <select 
-                    value={formData.typography.fontFamily}
-                    onChange={(e) => setFormData({...formData, typography: {...formData.typography, fontFamily: e.target.value}})}
-                    className="w-full bg-background border border-border rounded-xl p-3 text-sm font-black focus:outline-none"
-                  >
-                    {fonts.map(f => <option key={f} value={f}>{f}</option>)}
-                  </select>
-               </div>
-
-               <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-bold text-muted-foreground">Text Color</span>
-                  <div className="flex items-center gap-3 bg-background border border-border p-2 rounded-xl">
-                    <input 
-                       type="color" 
-                       value={formData.typography.color}
-                       onChange={(e) => setFormData({...formData, typography: {...formData.typography, color: e.target.value}})}
-                       className="w-10 h-10 rounded-lg border-2 border-border cursor-pointer bg-transparent overflow-hidden" 
-                    />
-                    <span className="text-xs font-black uppercase italic">{formData.typography.color}</span>
-                  </div>
-               </div>
-
-               <div className="flex flex-col gap-2">
+               <label className="text-xs font-black uppercase tracking-widest text-muted-foreground text-left">Message Configuration</label>
+               <div className="flex flex-col gap-2 text-left">
                   <span className="text-[10px] font-bold text-muted-foreground">Template</span>
                   <input 
                     type="text" 
@@ -228,7 +235,7 @@ export default function AlertsPage() {
                </div>
             </div>
 
-            <div className="flex flex-col gap-6 pt-4 border-t border-border">
+            <div className="flex flex-col gap-6 pt-4 border-t border-border text-left">
                <label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Audio</label>
                <input type="file" className="hidden" ref={soundInputRef} onChange={(e) => e.target.files?.[0] && uploadMedia(e.target.files[0], "sound")} />
                <div className="flex items-center gap-3">
@@ -251,19 +258,19 @@ export default function AlertsPage() {
           </div>
         </div>
 
-        {/* Right Preview Column (The High-Fidelity Mini Overlay) */}
-        <div className="xl:col-span-8 flex flex-col gap-8 sticky top-24">
+        {/* Right Preview Column (40%) */}
+        <div className="lg:col-span-5 flex flex-col gap-8 sticky top-24">
            
-           <div className="bg-slate-950 rounded-[48px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] border-[12px] border-slate-900 group">
+           <div className="bg-slate-950 rounded-[40px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] border-[10px] border-slate-900 group ml-auto w-full">
               {/* Header of Preview */}
-              <div className="p-6 bg-slate-900 flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 italic">Live Stream Preview</span>
+              <div className="p-5 bg-slate-900 flex items-center justify-between">
+                 <div className="flex items-center gap-3 text-left">
+                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 italic">Live Stream Preview</span>
                  </div>
                  <button 
                    onClick={triggerTestAlert}
-                   className="bg-primary px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-white hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/30"
+                   className="bg-primary px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest text-white hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/30"
                  >
                    Trigger Test Pop-up
                  </button>
@@ -273,27 +280,28 @@ export default function AlertsPage() {
               <div className="relative aspect-video bg-[#0c0c0c] flex flex-col items-center justify-center overflow-hidden">
                  
                  {/* 1. MOCK HALL OF FAME */}
-                 <div className="absolute bottom-6 left-6 flex flex-col gap-2 w-[240px] opacity-40 group-hover:opacity-100 transition-opacity">
+                 <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 w-[180px] opacity-40 group-hover:opacity-100 transition-opacity">
                     <div className="flex items-center gap-2 mb-1 px-3">
-                       <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
-                       <span className="text-[7px] font-black uppercase tracking-[0.4em] text-white/40 italic">Recent Tips</span>
+                       <div className="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
+                       <span className="text-[6px] font-black uppercase tracking-[0.4em] text-white/40 italic">Recent Tips</span>
                     </div>
-                    {[1, 2, 3].map(i => (
-                       <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-xl py-2 px-4 flex items-center justify-between">
-                          <span className="font-black text-white text-[10px] uppercase tracking-tighter">Supporter #{i}</span>
-                          <span className="font-black text-[#d4af37] text-[12px]">Rs. 500</span>
+                    {[1, 2].map(i => (
+                       <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-lg py-1.5 px-3 flex items-center justify-between">
+                          <span className="font-black text-white text-[8px] uppercase tracking-tighter">Supporter #{i}</span>
+                          <span className="font-black text-[#d4af37] text-[10px]">Rs. 500</span>
                        </div>
                     ))}
                  </div>
 
                  {/* 2. THE DYNAMIC ALERT RENDERING (Pixel-Perfect with Overlay) */}
-                 <div className="flex flex-col items-center gap-6">
+                 <div className="flex flex-col items-center gap-6 py-6 scale-90 sm:scale-100 transition-transform">
                     {/* Media Area */}
-                    <div className="relative">
-                       <div className="absolute inset-0 bg-primary/20 blur-[50px] rounded-full animate-pulse tracking-widest"></div>
-                       <div className="relative z-10 w-[240px] h-[240px] rounded-[40px] overflow-hidden border-4 border-white/20 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center shadow-2xl">
+                    <div className="relative group/media">
+                       {/* High-End Glow Effect */}
+                       <div className="absolute inset-0 bg-primary/30 blur-[60px] rounded-full animate-pulse transition-all group-hover/media:bg-primary/40"></div>
+                       <div className="relative z-10 w-[200px] h-[200px] rounded-[40px] overflow-hidden border-[3px] border-white/30 bg-slate-900/40 backdrop-blur-md flex items-center justify-center shadow-[0_32px_60px_-15px_rgba(0,0,0,0.5)] transition-transform group-hover/media:scale-105">
                           {formData.media.imageUri ? (
-                            <img src={formData.media.imageUri} className="w-full h-full object-contain" alt="Alert GIF" />
+                            <img src={formData.media.imageUri} className="w-full h-full object-contain drop-shadow-2xl" alt="Alert GIF" />
                           ) : (
                             <Coins className="w-16 h-16 text-primary" />
                           )}
@@ -301,49 +309,61 @@ export default function AlertsPage() {
                     </div>
 
                     {/* Text Area */}
-                    <div className="flex flex-col items-center text-center gap-3">
+                    <div className="flex flex-col items-center text-center gap-4 max-w-[90%]">
                        <div 
-                         className="font-black tracking-tighter drop-shadow-2xl"
+                         className="font-black tracking-tighter drop-shadow-[0_8px_16px_rgba(0,0,0,0.8)] leading-[0.9]"
                          style={{ 
-                            fontSize: formData.typography.fontSize / 1.5,
+                            fontSize: "40px", 
                             fontFamily: formData.typography.fontFamily,
-                            lineHeight: 0.8
+                            textShadow: `0 4px 0 rgba(0,0,0,0.2), 0 0 20px ${formData.typography.color}40`,
+                            color: '#ffffff'
                          }}
                        >
                           {formData.typography.messageTemplate.split(/(Rs\.\d+)/g).map((part, i) => (
-                            <span key={i} style={part.startsWith('Rs.') ? { color: formData.typography.color } : { color: '#ffffff' }}>
+                            <span key={i} style={part.startsWith('Rs.') ? { 
+                               color: formData.typography.color,
+                               textShadow: `0 0 30px ${formData.typography.color}60`
+                            } : {}}>
                                {part.replace("{tipper}", "John Wick").replace("{amount}", "500")}
                             </span>
                           ))}
                        </div>
 
-                       {/* Message Bubble */}
-                       <div className="mt-2 bg-white/10 backdrop-blur-2xl border border-white/10 px-6 py-4 rounded-[24px] shadow-2xl scale-75">
-                          <p className="text-white font-black text-sm italic tracking-tight underline underline-offset-4 decoration-primary/50">
-                             "This looks incredible! 🚀 Sahayog is the best!!"
+                       {/* Message Bubble - Premium Glassmorphism */}
+                       <div className="mt-2 bg-white/[0.08] backdrop-blur-3xl border border-white/10 px-8 py-5 rounded-[28px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform hover:scale-105 transition-all">
+                          <p className="text-white font-black text-sm italic tracking-tight leading-relaxed">
+                             <span className="text-primary/80 mr-2">"</span>
+                             This looks incredible! 🚀 Sahayog is the best!!
+                             <span className="text-primary/80 ml-2">"</span>
                           </p>
+                          <div className="mt-3 flex justify-center">
+                             <div className="h-1 w-12 bg-primary/30 rounded-full"></div>
+                          </div>
                        </div>
                     </div>
                  </div>
 
                  {/* Canvas Overlay Grid (Subtle) */}
-                 <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#fff 1px, transparent 0)", backgroundSize: "40px 40px" }}></div>
+                 <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: "radial-gradient(#fff 1px, transparent 0)", backgroundSize: "40px 40px" }}></div>
               </div>
 
               {/* Status Footer */}
-              <div className="p-6 bg-slate-900/50 flex items-center justify-center gap-8">
-                 <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">Duration</span>
+              <div className="p-5 bg-slate-900 flex items-center justify-center gap-10 border-t border-white/5">
+                 <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Duration</span>
                     <span className="text-xs font-black text-white">{formData.settings.duration}s</span>
                  </div>
-                 <div className="w-px h-4 bg-slate-800"></div>
-                 <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">Typo</span>
-                    <span className="text-xs font-black text-white">{formData.typography.fontSize}px / {formData.typography.fontFamily}</span>
+                 <div className="w-px h-5 bg-white/10"></div>
+                 <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Typography</span>
+                    <span className="text-xs font-black text-white">{formData.typography.fontFamily}</span>
                  </div>
-                 <div className="w-px h-4 bg-slate-800"></div>
-                 <div className="flex items-center gap-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">Audio</span>
+                 <div className="w-px h-5 bg-white/10"></div>
+                 <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Volume</span>
                     <span className="text-xs font-black text-white">{formData.settings.soundVolume}%</span>
                  </div>
               </div>
