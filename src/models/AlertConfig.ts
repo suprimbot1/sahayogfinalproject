@@ -49,6 +49,7 @@ const AlertConfigSchema: Schema = new Schema(
       messageTemplate: { type: String, default: "{tipper} tipped Rs.{amount}!!" },
       fontSize: { type: Number, default: 48 },
       fontWeight: { type: Number, default: 700 },
+      fontFamily: { type: String, default: "Inter" },
       color: { type: String, default: "#ffffff" },
     },
     animations: {
