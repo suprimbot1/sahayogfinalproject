@@ -200,7 +200,7 @@ export default function AlertsPage() {
                          min="0.5" 
                          max="2.0" 
                          step="0.1"
-                         value={formData.media.imageScale}
+                         value={formData.media.imageScale || 1.0}
                          onChange={(e) => setFormData({...formData, media: {...formData.media, imageScale: parseFloat(e.target.value)}})}
                          className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
                        />
@@ -215,7 +215,7 @@ export default function AlertsPage() {
                      <div className="flex flex-col gap-2 text-left">
                         <span className="text-[10px] font-bold text-muted-foreground">Font Family</span>
                         <select 
-                          value={formData.typography.fontFamily}
+                          value={formData.typography.fontFamily || 'Inter'}
                           onChange={(e) => setFormData({...formData, typography: {...formData.typography, fontFamily: e.target.value}})}
                           className="w-full bg-background border border-border rounded-xl p-3 text-sm font-black focus:outline-none"
                         >
@@ -232,7 +232,7 @@ export default function AlertsPage() {
                           type="range" 
                           min="12" 
                           max="120" 
-                          value={formData.typography.fontSize}
+                          value={formData.typography.fontSize || 48}
                           onChange={(e) => setFormData({...formData, typography: {...formData.typography, fontSize: parseInt(e.target.value)}})}
                           className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
                         />
@@ -243,7 +243,7 @@ export default function AlertsPage() {
                         <div className="flex items-center gap-3 bg-background border border-border p-2 rounded-xl">
                           <input 
                              type="color" 
-                             value={formData.typography.color}
+                             value={formData.typography.color || '#ffffff'}
                              onChange={(e) => setFormData({...formData, typography: {...formData.typography, color: e.target.value}})}
                              className="w-10 h-10 rounded-lg border-2 border-border cursor-pointer bg-transparent overflow-hidden" 
                           />
@@ -260,7 +260,7 @@ export default function AlertsPage() {
                   <span className="text-[10px] font-bold text-muted-foreground">Template</span>
                   <input 
                     type="text" 
-                    value={formData.typography.messageTemplate}
+                    value={formData.typography.messageTemplate || ''}
                     onChange={(e) => setFormData({ ...formData, typography: { ...formData.typography, messageTemplate: e.target.value } })}
                     className="w-full bg-background border border-border rounded-xl p-3 text-sm font-black focus:outline-none" 
                   />
@@ -276,7 +276,7 @@ export default function AlertsPage() {
                     type="range" 
                     min="12" 
                     max="48" 
-                    value={formData.typography.messageFontSize}
+                    value={formData.typography.messageFontSize || 24}
                     onChange={(e) => setFormData({...formData, typography: {...formData.typography, messageFontSize: parseInt(e.target.value)}})}
                     className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
                   />
