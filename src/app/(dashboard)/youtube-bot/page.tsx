@@ -1,10 +1,27 @@
 "use client";
 
-import { Trash2, MonitorPlay as YoutubeIcon, HelpCircle, LogIn } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Trash2, MonitorPlay as YoutubeIcon, HelpCircle, LogIn, Loader2, Users } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function YoutubeBotPage() {
   const { data: session, status } = useSession();
+  const [channelInfo, setChannelInfo] = useState<any>(null);
+  const [isFetchingChannel, setIsFetchingChannel] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsFetchingChannel(true);
+      fetch("/api/youtube/channel")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setChannelInfo(data);
+          }
+        })
+        .finally(() => setIsFetchingChannel(false));
+    }
+  }, [status]);
 
   return (
     <div className="flex flex-col gap-8 max-w-4xl">
@@ -35,18 +52,31 @@ export default function YoutubeBotPage() {
             </div>
 
             {/* Connected Channel Card */}
-            <div className="bg-card border border-border rounded-xl p-6 flex items-center justify-between shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-100 rounded-full flex flex-col items-center justify-center shrink-0 overflow-hidden">
-                  {session.user?.image ? (
-                   <img src={session.user.image} alt="Avatar" className="w-full h-full object-cover" />
+            <div className="bg-card border border-border rounded-2xl p-8 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 bg-red-100 rounded-2xl flex flex-col items-center justify-center shrink-0 overflow-hidden border border-border">
+                  {isFetchingChannel ? (
+                    <Loader2 className="w-6 h-6 text-red-600 animate-spin" />
+                  ) : channelInfo?.thumbnail || session.user?.image ? (
+                    <img src={channelInfo?.thumbnail || session.user?.image || ""} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
-                    <YoutubeIcon className="w-6 h-6 text-red-600" />
+                    <YoutubeIcon className="w-8 h-8 text-red-600" />
                   )}
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-sm text-foreground">{session.user?.name || "Connected Account"}</span>
-                  <span className="text-xs font-semibold text-muted-foreground">{session.user?.email}</span>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-lg text-foreground tracking-tight">
+                      {isFetchingChannel ? "Fetching Channel..." : channelInfo?.title || session.user?.name || "Connected Account"}
+                    </span>
+                    {channelInfo && <div className="w-2 h-2 rounded-full bg-emerald-500"></div>}
+                  </div>
+                  {channelInfo ? (
+                    <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mt-1">
+                      <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {new Intl.NumberFormat().format(channelInfo.subscriberCount)} Subscribers</span>
+                    </div>
+                  ) : (
+                    <span className="text-xs font-semibold text-muted-foreground">{session.user?.email}</span>
+                  )}
                 </div>
               </div>
 
