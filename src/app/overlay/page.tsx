@@ -88,8 +88,8 @@ export default function OverlayPage() {
     }
   }, [status, usernameParam]);
 
-  // Fallback for missing identity
-  if (connectionStatus === "error" && !usernameParam && status === "unauthenticated") {
+  // Fallback for missing identity or connection error
+  if (connectionStatus === "error") {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-slate-900 text-white p-10 font-sans">
         <div className="max-w-md bg-slate-800 p-8 rounded-3xl shadow-2xl border border-slate-700 space-y-4">

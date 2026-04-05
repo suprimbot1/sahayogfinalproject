@@ -9,14 +9,30 @@ function generateUsername(email: string | null) {
   return email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "").toLowerCase() + Math.floor(Math.random() * 100);
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const username = searchParams.get("username");
+
+    await dbConnect();
+
+    // 1. If username is provided, this is a public lookup (e.g. for overlays)
+    if (username) {
+      const sanitizedUsername = username.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const profile = await UserProfile.findOne({ username: sanitizedUsername });
+      
+      if (!profile) {
+        return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      }
+      
+      return NextResponse.json({ success: true, profile });
+    }
+
+    // 2. Otherwise, find the profile for the current session (private dashboard)
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    await dbConnect();
 
     // Find the profile, or create a default one if it doesn't exist
     let profile = await UserProfile.findOne({ userId: session.user.id });
@@ -35,10 +51,11 @@ export async function GET() {
       });
     }
 
+    // Return the raw profile object for simplicity in the private dashboard
     return NextResponse.json(profile);
   } catch (error: any) {
     console.error("GET Profile Error", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
   }
 }
 
