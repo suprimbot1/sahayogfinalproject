@@ -188,7 +188,7 @@ export default function AlertsPage() {
                           </div>
                        )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground text-center font-bold px-4">Transparent GIF or 512px PNG</p>
+                    <p className="text-[10px] text-muted-foreground text-center font-bold px-4">Transparent GIF or 300px PNG</p>
                     
                     <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
                        <div className="flex justify-between items-center">

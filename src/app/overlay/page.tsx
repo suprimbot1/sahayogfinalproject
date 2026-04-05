@@ -225,7 +225,7 @@ export default function OverlayPage() {
             >
               <div className="relative">
                  <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full animate-glow"></div>
-                 <div className="relative z-10 w-[60vw] max-w-[400px] aspect-square rounded-[15%/15%] overflow-hidden border-[1vw] border-white/20 shadow-[0_5vh_10vh_-2vh_rgba(0,0,0,0.7)] bg-slate-900/40 backdrop-blur-md flex items-center justify-center">
+                 <div className="relative z-10 w-[60vw] max-w-[300px] aspect-square rounded-[15%/15%] overflow-hidden border-[1vw] border-white/20 shadow-[0_5vh_10vh_-2vh_rgba(0,0,0,0.7)] bg-slate-900/40 backdrop-blur-md flex items-center justify-center">
                     {config?.media?.imageUri ? (
                       <img 
                         src={config.media.imageUri} 
