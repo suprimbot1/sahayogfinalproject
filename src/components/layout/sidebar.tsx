@@ -51,7 +51,7 @@ const streamingItems = [
   {
     title: "Message Overlay",
     icon: MessageSquare,
-    href: "/overlay",
+    href: "/message-overlay",
   },
   {
     title: "Live Action",
