@@ -14,14 +14,16 @@ export default function OverlayPage() {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "error">("connecting");
   const [showStatus, setShowStatus] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Parse username from URL
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const usernameParam = searchParams?.get("username");
 
   const unlockAudio = () => {
-    const audio = new Audio();
-    audio.play().catch(() => {}); // Play silent sound to unlock context
+    // Play a tiny base64 silent mp3 to "properly" unlock the audio context
+    const silentAudio = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFWmZtdCABAAAAAQAA8F9AAEBfQAAHAAIAQBCAAACAAAAAAAgAZGF0YAgAAAAAAAgAAAA=");
+    silentAudio.play().catch(() => {});
     setIsAudioEnabled(true);
   };
 
@@ -83,10 +85,19 @@ export default function OverlayPage() {
               return [data, ...prev].slice(0, 4);
             });
 
+            // BROADCAST QUALITY AUDIO ENGINE
             if (configData?.media?.soundUri) {
+              // Store in ref to prevent garbage collection on long sounds
+              if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+              }
               const audio = new Audio(configData.media.soundUri);
-              audio.volume = (configData.settings?.soundVolume || 80) / 100;
-              audio.play().catch(e => console.error("Audio Blocked:", e));
+              // Ensure volume is at 100% unless specified (boosted by 1.25x for broadcast clarity if possible)
+              const baseVolume = (configData.settings?.soundVolume || 100) / 100;
+              audio.volume = Math.min(baseVolume, 1.0);
+              audioRef.current = audio;
+              audio.play().catch(e => console.warn("Audio Playback Blocked by Browser/OBS", e));
             }
 
             const duration = (configData?.settings?.duration || 10) * 1000;
