@@ -18,9 +18,16 @@ export async function GET() {
     // 1. Calculate All Time Earnings (Successful Tips)
     const allTimeAgg = await Transaction.aggregate([
       { $match: { creatorId: userId, status: "COMPLETED" } },
-      { $group: { _id: null, total: { $sum: "$financials.netAmountNPR" } } }
+      { 
+        $group: { 
+          _id: null, 
+          totalNet: { $sum: "$financials.netAmountNPR" },
+          totalGross: { $sum: "$financials.amountNPR" }
+        } 
+      }
     ]);
-    const totalEarnings = allTimeAgg.length > 0 ? allTimeAgg[0].total : 0;
+    const totalEarnings = allTimeAgg.length > 0 ? allTimeAgg[0].totalNet : 0;
+    const grossEarnings = allTimeAgg.length > 0 ? allTimeAgg[0].totalGross : 0;
 
     // 2. Calculate Current Balance (Earnings - non-FAILED Payouts)
     const payoutsAgg = await Payout.aggregate([
@@ -43,6 +50,7 @@ export async function GET() {
       success: true,
       stats: {
         totalEarnings,
+        grossEarnings,
         todaysEarnings,
         currentBalance
       }
