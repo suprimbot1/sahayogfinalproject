@@ -312,10 +312,6 @@ export default function AlertsPage() {
            <div className="bg-slate-950 rounded-[40px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] border-[10px] border-slate-900 group ml-auto w-full">
               {/* Header of Preview */}
               <div className="p-5 bg-slate-900 flex items-center justify-between">
-                 <div className="flex items-center gap-3 text-left">
-                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></div>
-                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 italic">Live Stream Preview</span>
-                 </div>
                  <button 
                    onClick={triggerTestAlert}
                    className="bg-primary px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest text-white hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/30"
@@ -329,10 +325,6 @@ export default function AlertsPage() {
                  
                  {/* 1. MOCK HALL OF FAME */}
                  <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 w-[180px] opacity-40 group-hover:opacity-100 transition-opacity">
-                    <div className="flex items-center gap-2 mb-1 px-3">
-                       <div className="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
-                       <span className="text-[6px] font-black uppercase tracking-[0.4em] text-white/40 italic">Recent Tips</span>
-                    </div>
                     {[1, 2].map(i => (
                        <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/5 rounded-lg py-1.5 px-3 flex items-center justify-between">
                           <span className="font-black text-white text-[8px] uppercase tracking-tighter">Supporter #{i}</span>

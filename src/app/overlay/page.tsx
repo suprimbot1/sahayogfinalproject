@@ -190,10 +190,6 @@ export default function OverlayPage() {
             {/* 1. LAYER: PERSISTENT BROADCAST BAR (HALL OF FAME) - TRANSPARENT VERSION */}
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center">
                <div className="w-[480px] h-[330px] p-[10px] flex flex-col gap-3">
-                  <div className="flex items-center gap-3 mb-1 px-4 pt-2">
-                     <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_#10b981]"></div>
-                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 italic">Sahayog Activity</span>
-                  </div>
                   <div className="flex flex-col gap-2 overflow-hidden">
                      {recentTips.map((tip, i) => (
                         <div 
