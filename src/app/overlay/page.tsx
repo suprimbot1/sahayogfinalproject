@@ -8,6 +8,7 @@ export default function OverlayPage() {
   const { data: session, status } = useSession();
   
   const [alert, setAlert] = useState<any>(null);
+  const [recentTips, setRecentTips] = useState<any[]>([]);
   const [config, setConfig] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "error">("connecting");
@@ -42,7 +43,21 @@ export default function OverlayPage() {
         const configData = await configRes.json();
         setConfig(configData);
 
-        // 2. Setup SSE Connection
+        // 2. Fetch Initial Recent Tips (Hall of Fame)
+        if (username) {
+          const tipsRes = await fetch(`/api/transactions?username=${username}`);
+          const tipsData = await tipsRes.json();
+          if (tipsData.success) {
+             const mapped = tipsData.transactions.slice(0, 6).map((t: any) => ({
+               id: t._id,
+               supporter: t.supporter.name,
+               amount: t.financials.amountNPR,
+             }));
+             setRecentTips(mapped);
+          }
+        }
+
+        // 3. Setup SSE Connection
         const eventSource = new EventSource(`/api/live-alerts?creatorId=${creatorId}`);
         
         eventSource.onopen = () => {
@@ -54,8 +69,16 @@ export default function OverlayPage() {
           if (event.data === ": heartbeat") return;
           try {
             const data = JSON.parse(event.data);
+            
+            // Trigger Hero Alert
             setAlert(data);
             setIsVisible(true);
+
+            // Update Recent Tips List
+            setRecentTips(prev => {
+              const updated = [data, ...prev.filter(t => t.id !== data.id)];
+              return updated.slice(0, 6);
+            });
 
             // Audio Playback
             if (configData?.media?.soundUri) {
@@ -142,7 +165,30 @@ export default function OverlayPage() {
           </div>
         )}
 
-        {/* High-Impact Vertical Alert */}
+        {/* 1. LAYER: PERSISTENT SUPPORTERS LIST (The "Hall of Fame") */}
+        <div className="absolute bottom-10 left-10 flex flex-col gap-3 w-[360px] animate-in slide-in-from-bottom-10 duration-1000">
+           <div className="flex items-center gap-2 mb-2 px-4">
+              <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">Latest Supporters</span>
+           </div>
+           {recentTips.map((tip, i) => (
+              <div 
+                key={tip.id || i}
+                className="bg-[#0a1128]/80 backdrop-blur-3xl border border-white/5 rounded-2xl p-5 flex items-center justify-between shadow-2xl transition-all duration-500 animate-in slide-in-from-left-5"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                 <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center font-black text-indigo-400 text-xs">
+                       {tip.supporter.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="font-black text-white text-md tracking-tight">{tip.supporter}</span>
+                 </div>
+                 <span className="font-black text-[#d4af37] text-lg tracking-tighter">Rs. {tip.amount}</span>
+              </div>
+           ))}
+        </div>
+
+        {/* 2. LAYER: HIGH-IMPACT HERO ALERT (Pop-up) */}
         <div 
           className={`flex flex-col items-center gap-8 transition-all duration-700 transform ${
             isVisible 
@@ -197,6 +243,7 @@ export default function OverlayPage() {
         </div>
 
       </div>
+
     </>
   );
 }
