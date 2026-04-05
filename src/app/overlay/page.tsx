@@ -110,10 +110,12 @@ export default function OverlayPage() {
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-transparent font-sans select-none pointer-events-none">
-      
-      {/* Connection Status Indicator */}
-      {showStatus && (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: `body { background-color: transparent !important; }` }} />
+      <div className="relative h-screen w-screen overflow-hidden bg-transparent font-sans select-none pointer-events-none">
+        
+        {/* Connection Status Indicator */}
+        {showStatus && (
         <div className={`absolute top-4 left-4 p-3 rounded-full flex items-center gap-3 transition-opacity duration-1000 ${connectionStatus === "connected" ? "bg-emerald-500/10 text-emerald-400" : "bg-white/10 text-white animate-pulse"}`}>
            {connectionStatus === "connected" ? <CheckCircle2 className="w-4 h-4" /> : <Loader2 className="w-4 h-4 animate-spin" />}
            <span className="text-[10px] font-black uppercase tracking-widest">
@@ -172,6 +174,7 @@ export default function OverlayPage() {
         )}
       </div>
 
-    </div>
+      </div>
+    </>
   );
 }
