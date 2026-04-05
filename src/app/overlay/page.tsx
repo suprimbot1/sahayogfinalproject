@@ -262,7 +262,7 @@ export default function OverlayPage() {
                  </div>
 
                  {alert?.message && (
-                   <div className="bg-white/[0.08] backdrop-blur-3xl border border-white/10 px-10 py-6 sm:px-12 sm:py-8 rounded-[40px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] animate-pop-in">
+                   <div className="bg-white/[0.08] backdrop-blur-3xl border border-white/10 p-[10px] rounded-[40px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] animate-pop-in">
                       <p 
                         className="text-white font-black italic tracking-tight leading-relaxed max-w-xl"
                         style={{ fontSize: config?.typography?.messageFontSize ? config.typography.messageFontSize + 'px' : '20px' }}

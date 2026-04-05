@@ -383,7 +383,7 @@ export default function AlertsPage() {
                        </div>
 
                        {/* Message Bubble - Premium Glassmorphism */}
-                       <div className="mt-2 bg-white/[0.08] backdrop-blur-3xl border border-white/10 px-8 py-5 rounded-[28px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform hover:scale-105 transition-all">
+                       <div className="mt-2 bg-white/[0.08] backdrop-blur-3xl border border-white/10 p-[10px] rounded-[28px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform hover:scale-105 transition-all">
                           <p 
                              className="text-white font-black italic tracking-tight leading-relaxed"
                              style={{ fontSize: (formData.typography.messageFontSize || 14) * 0.7 + 'px' }}
