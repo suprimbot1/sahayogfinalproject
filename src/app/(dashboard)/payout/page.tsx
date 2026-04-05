@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Download, Plus, Loader2, CheckCircle2, History, Wallet, ArrowUpRight, ArrowDownLeft, Building2, Coins, Info, Copy, Settings2 } from "lucide-react";
-import { useSession } from "react-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function PayoutPage() {
   const { data: session } = useSession();
