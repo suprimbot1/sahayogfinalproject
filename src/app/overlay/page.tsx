@@ -227,9 +227,14 @@ export default function OverlayPage() {
                  <div className="absolute inset-0 bg-primary/20 blur-[60px] rounded-full animate-glow"></div>
                  <div className="relative z-10 w-[60vw] max-w-[400px] aspect-square rounded-[15%/15%] overflow-hidden border-[1vw] border-white/20 shadow-[0_5vh_10vh_-2vh_rgba(0,0,0,0.7)] bg-slate-900/40 backdrop-blur-md flex items-center justify-center">
                     {config?.media?.imageUri ? (
-                      <img src={config.media.imageUri} className="w-full h-full object-contain drop-shadow-2xl" alt="Alert" />
+                      <img 
+                        src={config.media.imageUri} 
+                        className="w-full h-full object-contain drop-shadow-2xl transition-transform" 
+                        style={{ transform: `scale(${config?.media?.imageScale || 1.0})` }}
+                        alt="Alert" 
+                      />
                     ) : (
-                      <Coins className="w-[15vw] h-[15vw] max-w-[120px] text-primary animate-bounce shadow-primary" />
+                      <Coins className="w-[15vw] h-[15vw] max-w-[120px] text-primary animate-bounce shadow-primary transition-transform" style={{ transform: `scale(${config?.media?.imageScale || 1.0})` }} />
                     )}
                  </div>
               </div>
@@ -258,7 +263,10 @@ export default function OverlayPage() {
 
                  {alert?.message && (
                    <div className="bg-white/[0.08] backdrop-blur-3xl border border-white/10 px-10 py-6 sm:px-12 sm:py-8 rounded-[40px] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] animate-pop-in">
-                      <p className="text-white font-black text-xl sm:text-2xl italic tracking-tight leading-relaxed max-w-xl">
+                      <p 
+                        className="text-white font-black italic tracking-tight leading-relaxed max-w-xl"
+                        style={{ fontSize: config?.typography?.messageFontSize ? config.typography.messageFontSize + 'px' : '20px' }}
+                      >
                          "{alert.message}"
                       </p>
                       <div className="mt-6 flex justify-center">

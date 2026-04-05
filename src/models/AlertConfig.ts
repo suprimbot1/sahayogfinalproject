@@ -6,6 +6,7 @@ export interface IAlertConfig extends Document {
   layout: "IMAGE_TOP" | "IMAGE_LEFT" | "IMAGE_RIGHT" | "IMAGE_CENTER";
   media: {
     imageUri?: string;
+    imageScale?: number;
     soundUri?: string;
   };
   settings: {
@@ -16,6 +17,7 @@ export interface IAlertConfig extends Document {
   typography: {
     messageTemplate: string;
     fontSize: number;
+    messageFontSize: number;
     fontWeight: number;
     color: string;
   };
@@ -38,6 +40,7 @@ const AlertConfigSchema: Schema = new Schema(
     layout: { type: String, enum: ["IMAGE_TOP", "IMAGE_LEFT", "IMAGE_RIGHT", "IMAGE_CENTER"], default: "IMAGE_TOP" },
     media: {
       imageUri: { type: String, default: "" },
+      imageScale: { type: Number, default: 1.0 },
       soundUri: { type: String, default: "" },
     },
     settings: {
@@ -48,6 +51,7 @@ const AlertConfigSchema: Schema = new Schema(
     typography: {
       messageTemplate: { type: String, default: "{tipper} tipped Rs.{amount}!!" },
       fontSize: { type: Number, default: 48 },
+      messageFontSize: { type: Number, default: 24 },
       fontWeight: { type: Number, default: 700 },
       fontFamily: { type: String, default: "Inter" },
       color: { type: String, default: "#ffffff" },

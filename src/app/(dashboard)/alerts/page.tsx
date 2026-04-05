@@ -26,12 +26,14 @@ export default function AlertsPage() {
     layout: "IMAGE_TOP" as const,
     media: { 
        imageUri: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJocXRhN3p3eXoyN3p3eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxx8A79c5EY/giphy.gif", 
+       imageScale: 1.0,
        soundUri: "https://www.myinstants.com/media/sounds/mlg-airhorn.mp3" 
     },
     settings: { duration: 10, delay: 4, soundVolume: 80 },
     typography: { 
       messageTemplate: "{tipper} tipped Rs.{amount}!!", 
       fontSize: 48, 
+      messageFontSize: 24,
       fontWeight: 900, 
       fontFamily: "Inter",
       color: "#10b981" 
@@ -187,6 +189,22 @@ export default function AlertsPage() {
                        )}
                     </div>
                     <p className="text-[10px] text-muted-foreground text-center font-bold px-4">Transparent GIF or 512px PNG</p>
+                    
+                    <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
+                       <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase">GIF Scale</span>
+                          <span className="text-[10px] font-black text-primary">{Math.round(formData.media.imageScale * 100)}%</span>
+                       </div>
+                       <input 
+                         type="range" 
+                         min="0.5" 
+                         max="2.0" 
+                         step="0.1"
+                         value={formData.media.imageScale}
+                         onChange={(e) => setFormData({...formData, media: {...formData.media, imageScale: parseFloat(e.target.value)}})}
+                         className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
+                       />
+                    </div>
                  </div>
                </div>
 
@@ -247,6 +265,21 @@ export default function AlertsPage() {
                     className="w-full bg-background border border-border rounded-xl p-3 text-sm font-black focus:outline-none" 
                   />
                   <p className="text-[9px] text-muted-foreground uppercase tracking-widest font-black italic">Tokens: {"{tipper}"}, {"{amount}"}</p>
+               </div>
+
+               <div className="flex flex-col gap-2 mt-2">
+                  <div className="flex justify-between items-center">
+                     <span className="text-[10px] font-bold text-muted-foreground uppercase">Message Font Size</span>
+                     <span className="text-[10px] font-black text-primary">{formData.typography.messageFontSize}px</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="12" 
+                    max="48" 
+                    value={formData.typography.messageFontSize}
+                    onChange={(e) => setFormData({...formData, typography: {...formData.typography, messageFontSize: parseInt(e.target.value)}})}
+                    className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-primary"
+                  />
                </div>
             </div>
 
@@ -316,9 +349,14 @@ export default function AlertsPage() {
                        <div className="absolute inset-0 bg-primary/30 blur-[60px] rounded-full animate-pulse transition-all group-hover/media:bg-primary/40"></div>
                        <div className="relative z-10 w-[200px] h-[200px] rounded-[40px] overflow-hidden border-[3px] border-white/30 bg-slate-900/40 backdrop-blur-md flex items-center justify-center shadow-[0_32px_60px_-15px_rgba(0,0,0,0.5)] transition-transform group-hover/media:scale-105">
                           {formData.media.imageUri ? (
-                            <img src={formData.media.imageUri} className="w-full h-full object-contain drop-shadow-2xl" alt="Alert GIF" />
+                            <img 
+                               src={formData.media.imageUri} 
+                               className="w-full h-full object-contain drop-shadow-2xl transition-transform" 
+                               style={{ transform: `scale(${formData.media.imageScale})` }}
+                               alt="Alert GIF" 
+                            />
                           ) : (
-                            <Coins className="w-16 h-16 text-primary" />
+                            <Coins className="w-16 h-16 text-primary transition-transform" style={{ transform: `scale(${formData.media.imageScale})` }} />
                           )}
                        </div>
                     </div>
@@ -346,7 +384,10 @@ export default function AlertsPage() {
 
                        {/* Message Bubble - Premium Glassmorphism */}
                        <div className="mt-2 bg-white/[0.08] backdrop-blur-3xl border border-white/10 px-8 py-5 rounded-[28px] shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transform hover:scale-105 transition-all">
-                          <p className="text-white font-black text-sm italic tracking-tight leading-relaxed">
+                          <p 
+                             className="text-white font-black italic tracking-tight leading-relaxed"
+                             style={{ fontSize: (formData.typography.messageFontSize || 14) * 0.7 + 'px' }}
+                          >
                              <span className="text-primary/80 mr-2">"</span>
                              This looks incredible! 🚀 Sahayog is the best!!
                              <span className="text-primary/80 ml-2">"</span>
