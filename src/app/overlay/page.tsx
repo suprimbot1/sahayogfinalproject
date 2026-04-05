@@ -48,7 +48,7 @@ export default function OverlayPage() {
           const tipsRes = await fetch(`/api/transactions?username=${username}`);
           const tipsData = await tipsRes.json();
           if (tipsData.success) {
-             const mapped = tipsData.transactions.slice(0, 6).map((t: any) => ({
+             const mapped = tipsData.transactions.slice(0, 4).map((t: any) => ({
                id: t._id,
                supporter: t.supporter.name,
                amount: t.financials.amountNPR,
@@ -74,10 +74,10 @@ export default function OverlayPage() {
             setAlert(data);
             setIsVisible(true);
 
-            // Update Recent Tips List
+            // Update Recent Tips List (Limit to 4)
             setRecentTips(prev => {
               const updated = [data, ...prev.filter(t => t.id !== data.id)];
-              return updated.slice(0, 6);
+              return updated.slice(0, 4);
             });
 
             // Audio Playback
@@ -166,24 +166,25 @@ export default function OverlayPage() {
         )}
 
         {/* 1. LAYER: PERSISTENT SUPPORTERS LIST (The "Hall of Fame") */}
-        <div className="absolute bottom-10 left-10 flex flex-col gap-3 w-[360px] animate-in slide-in-from-bottom-10 duration-1000">
-           <div className="flex items-center gap-2 mb-2 px-4">
-              <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">Latest Supporters</span>
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col gap-3 w-[800px] animate-in fade-in slide-in-from-bottom-5 duration-1000">
+           <div className="flex items-center gap-2 mb-1 px-4">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/40">Recent Activity</span>
            </div>
            {recentTips.map((tip, i) => (
               <div 
                 key={tip.id || i}
-                className="bg-[#0a1128]/80 backdrop-blur-3xl border border-white/5 rounded-2xl p-5 flex items-center justify-between shadow-2xl transition-all duration-500 animate-in slide-in-from-left-5"
-                style={{ animationDelay: `${i * 100}ms` }}
+                className="bg-gradient-to-r from-[#0a1128] to-[#060b1d] backdrop-blur-3xl border border-white/5 rounded-2xl py-4 px-8 flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.4)] transition-all duration-500 animate-in slide-in-from-left-10"
+                style={{ animationDelay: `${i * 150}ms` }}
               >
-                 <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center font-black text-indigo-400 text-xs">
-                       {tip.supporter.charAt(0).toUpperCase()}
-                    </div>
-                    <span className="font-black text-white text-md tracking-tight">{tip.supporter}</span>
+                 <div className="flex items-center gap-5">
+                    <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+                    <span className="font-black text-white text-xl tracking-tight uppercase italic">{tip.supporter}</span>
                  </div>
-                 <span className="font-black text-[#d4af37] text-lg tracking-tighter">Rs. {tip.amount}</span>
+                 <div className="flex items-baseline gap-2">
+                    <span className="text-[10px] font-black text-white/30 uppercase tracking-widest leading-none">NPR</span>
+                    <span className="font-black text-[#d4af37] text-2xl tracking-tighter drop-shadow-2xl">{tip.amount}</span>
+                 </div>
               </div>
            ))}
         </div>
