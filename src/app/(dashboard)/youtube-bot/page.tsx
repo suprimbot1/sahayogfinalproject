@@ -9,6 +9,8 @@ export default function YoutubeBotPage() {
   const [channelInfo, setChannelInfo] = useState<any>(null);
   const [isFetchingChannel, setIsFetchingChannel] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isResetting, setIsResetting] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -17,11 +19,18 @@ export default function YoutubeBotPage() {
       fetch("/api/youtube/channel")
         .then(res => res.json())
         .then(data => {
-          if (data.success) {
+          if (data && data.success) {
             setChannelInfo(data);
           } else {
-            console.error("YouTube Channel API return:", data);
-            setFetchError(data.error || "Unknown Error");
+            if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+               setErrorMessage(data.message || data.error || null);
+            }
+            
+            if (data?.error === "reauth_required") {
+              setFetchError("reauth");
+            } else {
+              setFetchError(data?.error || "connection_issue");
+            }
           }
         })
         .catch(err => {
@@ -79,7 +88,7 @@ export default function YoutubeBotPage() {
                         ? "Fetching Channel..." 
                         : channelInfo?.title 
                           ? channelInfo.title 
-                          : fetchError ? `Error: ${fetchError}` : (session.user?.name ? `${session.user.name}'s Channel` : "YouTube Channel")}
+                          : (session.user?.name ? `${session.user.name}'s Channel` : "YouTube Channel")}
                     </span>
                     {channelInfo && <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1"></div>}
                   </div>
@@ -88,7 +97,23 @@ export default function YoutubeBotPage() {
                       <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {new Intl.NumberFormat().format(channelInfo.subscriberCount)} Subscribers</span>
                     </div>
                   ) : (
-                    <span className="text-sm font-semibold text-muted-foreground">Connected via: {session.user?.email}</span>
+                    <div className="flex flex-col gap-2">
+                       <span className="text-sm font-semibold text-emerald-500 flex items-center gap-1.5">
+                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                         Channel Connected
+                       </span>
+                       {fetchError === "reauth" && (
+                         <div className="flex gap-2 items-center">
+                            <span className="text-[10px] text-muted-foreground italic">Session refresh may be needed for stats</span>
+                            <button 
+                              onClick={() => signOut()}
+                              className="text-[9px] font-black bg-red-500/5 text-red-500/40 px-1.5 py-0.5 rounded uppercase hover:bg-red-500 hover:text-white transition-all"
+                            >
+                              Reconnect
+                            </button>
+                         </div>
+                       )}
+                    </div>
                   )}
                 </div>
               </div>

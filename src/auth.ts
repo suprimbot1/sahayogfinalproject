@@ -57,4 +57,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
+  events: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google" && user?.id) {
+        try {
+          const client = await clientPromise;
+          const db = client.db();
+          
+          const updateData: any = {
+            access_token: account.access_token,
+            expires_at: account.expires_at,
+            scope: account.scope,
+            id_token: account.id_token,
+          };
+
+          // ONLY update refresh_token if it's provided (Google only sends it once usually)
+          if (account.refresh_token) {
+            updateData.refresh_token = account.refresh_token;
+          }
+          
+          await db.collection("accounts").updateOne(
+            { 
+              userId: new ObjectId(user.id), 
+              provider: "google" 
+            },
+            { $set: updateData },
+            { upsert: true }
+          );
+          console.log("Successfully synced Google tokens to DB for user:", user.id);
+        } catch (error) {
+          console.error("Failed to sync Google tokens to DB on signIn:", error);
+        }
+      }
+    }
+  }
 });
