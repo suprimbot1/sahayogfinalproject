@@ -9,7 +9,7 @@ export function ToggleUserButton({ userId, isActive }: { userId: string, isActiv
 
   return (
     <button
-      onClick={() => startTransition(() => toggleUserStatus(userId, isActive))}
+      onClick={() => startTransition(async () => { await toggleUserStatus(userId, isActive); })}
       disabled={isPending}
       className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center justify-center min-w-[70px] ${
         isActive 
@@ -28,14 +28,14 @@ export function PayoutActionButtons({ payoutId }: { payoutId: string }) {
   return (
     <div className="flex items-center justify-end gap-2">
       <button 
-        onClick={() => startTransition(() => updatePayoutStatus(payoutId, "SUCCESS"))}
+        onClick={() => startTransition(async () => { await updatePayoutStatus(payoutId, "SUCCESS"); })}
         disabled={isPending}
         className="text-xs font-bold bg-emerald-500 text-white px-3 py-1.5 rounded-lg hover:bg-emerald-600 transition-colors disabled:opacity-50"
       >
         Approve
       </button>
       <button 
-        onClick={() => startTransition(() => updatePayoutStatus(payoutId, "FAILED"))}
+        onClick={() => startTransition(async () => { await updatePayoutStatus(payoutId, "FAILED"); })}
         disabled={isPending}
         className="text-xs font-bold bg-muted text-muted-foreground px-3 py-1.5 rounded-lg hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50"
       >
