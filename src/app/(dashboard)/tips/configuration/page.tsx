@@ -160,7 +160,7 @@ export default function TipsConfigurationPage() {
             <Globe className="w-4 h-4" /> Your Public Tip URL
         </label>
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex-1 flex items-center gap-3 bg-white border border-border rounded-2xl px-5 py-3 text-[15px] font-bold text-foreground w-full shadow-sm">
+          <div className="flex-1 flex items-center gap-3 bg-card border border-border rounded-2xl px-5 py-3 text-[15px] font-bold text-foreground w-full shadow-sm">
             <span className="truncate flex-1 text-muted-foreground">
                {baseUrl}/<span className="text-foreground">{formData.username || "username"}</span>
             </span>
@@ -168,7 +168,7 @@ export default function TipsConfigurationPage() {
           </div>
           <button 
             onClick={() => window.open(`/${formData.username}`, "_blank")}
-            className="bg-white hover:bg-gray-50 text-foreground border border-border font-bold px-8 py-3 rounded-2xl whitespace-nowrap transition-all w-full sm:w-auto shadow-sm flex items-center justify-center gap-2"
+            className="bg-card hover:bg-muted text-foreground border border-border font-bold px-8 py-3 rounded-2xl whitespace-nowrap transition-all w-full sm:w-auto shadow-sm flex items-center justify-center gap-2"
           >
             Launch Page <ExternalLink className="w-4 h-4" />
           </button>
@@ -190,7 +190,7 @@ export default function TipsConfigurationPage() {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-3xl border border-border shadow-sm p-6 md:p-10">
+      <div className="bg-card rounded-3xl border border-border shadow-sm p-6 md:p-10">
         
         {/* Setup Tab */}
         {activeTab === "setup" && (
@@ -203,7 +203,7 @@ export default function TipsConfigurationPage() {
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, "") })}
                   placeholder="jiggle-official"
-                  className="w-full bg-slate-50 border border-border rounded-xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full bg-muted text-foreground border border-border rounded-xl p-4 text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
                 <p className="text-xs text-muted-foreground">Only letters and numbers. Changing this will break your old links!</p>
               </div>
@@ -214,7 +214,7 @@ export default function TipsConfigurationPage() {
                     <label className="text-sm font-bold text-foreground">Cover Image</label>
                     <div 
                       onClick={() => fileInputRef.current?.click()}
-                      className="h-32 rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-all cursor-pointer overflow-hidden relative"
+                      className="h-32 rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted hover:bg-muted/80 transition-all cursor-pointer overflow-hidden relative"
                     >
                        {formData.coverImage ? (
                           <img src={formData.coverImage} className="w-full h-full object-cover" />
@@ -226,7 +226,7 @@ export default function TipsConfigurationPage() {
                     <label className="text-sm font-bold text-foreground">Profile Image</label>
                     <div 
                       onClick={() => profileInputRef.current?.click()}
-                      className="w-32 h-32 rounded-3xl border-2 border-dashed border-border flex items-center justify-center bg-slate-50 hover:bg-slate-100 transition-all cursor-pointer overflow-hidden"
+                      className="w-32 h-32 rounded-3xl border-2 border-dashed border-border flex items-center justify-center bg-muted hover:bg-muted/80 transition-all cursor-pointer overflow-hidden"
                     >
                        {formData.profileImage ? (
                           <img src={formData.profileImage} className="w-full h-full object-cover" />
@@ -243,7 +243,7 @@ export default function TipsConfigurationPage() {
                     <textarea 
                        value={formData.about}
                        onChange={(e) => setFormData({...formData, about: e.target.value})}
-                       className="w-full bg-slate-50 border border-border rounded-xl p-4 text-sm min-h-[120px] focus:ring-2 focus:ring-primary/20 transition-all"
+                       className="w-full bg-muted text-foreground border border-border rounded-xl p-4 text-sm min-h-[120px] focus:ring-2 focus:ring-primary/20 transition-all"
                        placeholder="Tell your fans a bit about yourself..."
                     />
                  </div>
@@ -255,7 +255,7 @@ export default function TipsConfigurationPage() {
                        <select 
                           value={socialInput.platform}
                           onChange={(e) => setSocialInput({...socialInput, platform: e.target.value})}
-                          className="bg-slate-50 border border-border rounded-xl px-4 py-3 text-sm font-bold"
+                          className="bg-muted text-foreground border border-border rounded-xl px-4 py-3 text-sm font-bold"
                        >
                           <option>Youtube</option>
                           <option>Instagram</option>
@@ -267,15 +267,15 @@ export default function TipsConfigurationPage() {
                           value={socialInput.url}
                           onChange={(e) => setSocialInput({...socialInput, url: e.target.value})}
                           placeholder="https://youtube.com/..."
-                          className="flex-1 bg-slate-50 border border-border rounded-xl p-3 text-sm"
+                          className="flex-1 bg-muted text-foreground border border-border rounded-xl p-3 text-sm"
                        />
-                       <button onClick={addSocialLink} className="bg-primary text-white p-3 rounded-xl hover:scale-105 transition-transform">
+                       <button onClick={addSocialLink} className="bg-primary text-primary-foreground p-3 rounded-xl hover:scale-105 transition-transform">
                           <PlusCircle className="w-5 h-5" />
                        </button>
                     </div>
                     <div className="flex flex-wrap gap-3">
                        {formData.socialLinks.map((link, idx) => (
-                          <div key={idx} className="bg-slate-100 px-4 py-2 rounded-full flex items-center gap-3 text-sm font-bold">
+                          <div key={idx} className="bg-muted text-foreground px-4 py-2 rounded-full flex items-center gap-3 text-sm font-bold border border-border">
                              <Globe className="w-4 h-4" />
                              {link.url.replace(/https?:\/\/(www\.)?/, "").split("/")[0]}
                              <Trash2 onClick={() => removeSocialLink(idx)} className="w-3.5 h-3.5 text-muted-foreground hover:text-red-500 cursor-pointer" />
@@ -290,13 +290,13 @@ export default function TipsConfigurationPage() {
         {/* Payout Tab */}
         {activeTab === "payout" && (
            <div className="flex flex-col gap-8">
-              <div className="bg-emerald-50 border border-emerald-200 p-6 rounded-3xl flex items-center gap-4">
+              <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 p-6 rounded-3xl flex items-center gap-4">
                  <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center shrink-0">
                     <Landmark className="w-6 h-6 text-white" />
                  </div>
                  <div>
-                    <h3 className="font-bold text-emerald-800">Verification Account</h3>
-                    <p className="text-xs text-emerald-600">Enter where we should send your earnings after verification.</p>
+                    <h3 className="font-bold text-emerald-800 dark:text-emerald-400">Verification Account</h3>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-500">Enter where we should send your earnings after verification.</p>
                  </div>
               </div>
 
@@ -306,7 +306,7 @@ export default function TipsConfigurationPage() {
                     <select 
                        value={formData.payoutDetails.method}
                        onChange={(e) => setFormData({...formData, payoutDetails: {...formData.payoutDetails, method: e.target.value}})}
-                       className="bg-slate-50 border border-border rounded-xl p-4 text-sm font-bold"
+                       className="bg-muted text-foreground border border-border rounded-xl p-4 text-sm font-bold"
                     >
                        <option value="KHALTI">Khalti (E-Wallet)</option>
                        <option value="BANK">Bank Account (Nepal Only)</option>
@@ -318,7 +318,7 @@ export default function TipsConfigurationPage() {
                        value={formData.payoutDetails.accountNumber}
                        onChange={(e) => setFormData({...formData, payoutDetails: {...formData.payoutDetails, accountNumber: e.target.value}})}
                        placeholder={formData.payoutDetails.method === "KHALTI" ? "98XXXXXXXX" : "XXXX-XXXX-XXXX"}
-                       className="bg-slate-50 border border-border rounded-xl p-4 text-sm font-bold"
+                       className="bg-muted text-foreground border border-border rounded-xl p-4 text-sm font-bold"
                     />
                  </div>
               </div>
@@ -329,7 +329,7 @@ export default function TipsConfigurationPage() {
                     value={formData.payoutDetails.accountName}
                     onChange={(e) => setFormData({...formData, payoutDetails: {...formData.payoutDetails, accountName: e.target.value}})}
                     placeholder="As shown on your ID or Citizen card"
-                    className="bg-slate-50 border border-border rounded-xl p-4 text-sm font-bold"
+                    className="bg-muted text-foreground border border-border rounded-xl p-4 text-sm font-bold"
                  />
                  <p className="text-xs text-muted-foreground italic">Important: This name must match your withdrawal account to avoid delays.</p>
               </div>
@@ -343,7 +343,7 @@ export default function TipsConfigurationPage() {
               {recentTips.length > 0 ? (
                  <div className="flex flex-col border border-border rounded-2xl overflow-hidden shadow-sm">
                     {recentTips.map((tip, idx) => (
-                       <div key={idx} className="p-5 border-b border-border/50 last:border-0 hover:bg-slate-50 transition-colors flex items-center justify-between">
+                       <div key={idx} className="p-5 border-b border-border/50 last:border-0 hover:bg-muted transition-colors flex items-center justify-between">
                           <div className="flex flex-col gap-0.5">
                              <span className="text-sm font-bold text-foreground">{tip.supporter.name}</span>
                              <span className="text-xs text-muted-foreground">{new Date(tip.createdAt).toLocaleDateString()}</span>

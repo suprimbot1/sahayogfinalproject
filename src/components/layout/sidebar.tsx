@@ -42,12 +42,12 @@ const streamingItems = [
     icon: Bell,
     href: "/alerts",
   },
-  {
-    title: "Tip Goal",
-    icon: Target,
-    href: "/tips/goals",
-    isNew: true,
-  },
+  // {
+  //   title: "Tip Goal",
+  //   icon: Target,
+  //   href: "/tips/goals",
+  //   isNew: true,
+  // },
   {
     title: "Message Overlay",
     icon: MessageSquare,
@@ -63,11 +63,11 @@ const streamingItems = [
     icon: Youtube,
     href: "/youtube-bot",
   },
-  {
-    title: "MultiStream",
-    icon: RefreshCw,
-    href: "/multistream",
-  },
+  // {
+  //   title: "MultiStream",
+  //   icon: RefreshCw,
+  //   href: "/multistream",
+  // },
 ];
 
 const financeItems = [
@@ -89,16 +89,16 @@ const supportItems = [
     icon: MessageCircle,
     href: "/support/discord",
   },
-  {
-    title: "WhatsApp Support",
-    icon: MessageCircle,
-    href: "/support/whatsapp",
-  },
-  {
-    title: "Bug Report",
-    icon: Bug,
-    href: "/support/bug-report",
-  },
+  // {
+  //   title: "WhatsApp Support",
+  //   icon: MessageCircle,
+  //   href: "/support/whatsapp",
+  // },
+  // {
+  //   title: "Bug Report",
+  //   icon: Bug,
+  //   href: "/support/bug-report",
+  // },
 ];
 
 export function Sidebar() {
@@ -110,11 +110,10 @@ export function Sidebar() {
       <Link
         key={item.href}
         href={item.href}
-        className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-          isActive
-            ? "bg-primary/10 text-primary"
-            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-        }`}
+        className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
+          ? "bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+          }`}
       >
         <item.icon
           className={`w-4 h-4 ${isActive ? "text-primary" : "text-muted-foreground"}`}

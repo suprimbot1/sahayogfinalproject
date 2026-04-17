@@ -152,33 +152,33 @@ export default function PayoutPage() {
     .reduce((acc, current) => acc + (current.amountNPR || 0), 0);
 
   return (
-    <div className="flex flex-col gap-10 max-w-[1400px] mx-auto p-4 md:p-10 bg-white min-h-screen">
+    <div className="flex flex-col gap-10 max-w-[1400px] mx-auto p-4 md:p-10 bg-background min-h-screen">
       
       {/* Header */}
       <div className="flex flex-col gap-2">
-         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Payouts</h1>
-         <p className="text-sm font-medium text-gray-400">Manage your payout details and view your payout history.</p>
+         <h1 className="text-3xl font-black text-foreground tracking-tight">Payouts</h1>
+         <p className="text-sm font-medium text-muted-foreground">Manage your payout details and view your payout history.</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-10 border-b border-gray-100 mb-2">
+      <div className="flex items-center gap-10 border-b border-border mb-2">
          <button 
            onClick={() => setActiveTab("request")}
            className={`pb-4 text-sm font-black transition-all relative ${
-             activeTab === "request" ? "text-[#008d4a]" : "text-gray-400"
+             activeTab === "request" ? "text-primary" : "text-muted-foreground"
            }`}
          >
            Payout Request
-           {activeTab === "request" && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-[#008d4a] rounded-full"></div>}
+           {activeTab === "request" && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-full"></div>}
          </button>
          <button 
            onClick={() => setActiveTab("history")}
            className={`pb-4 text-sm font-black transition-all relative ${
-             activeTab === "history" ? "text-[#008d4a]" : "text-gray-400"
+             activeTab === "history" ? "text-primary" : "text-muted-foreground"
            }`}
          >
            Payout History
-           {activeTab === "history" && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-[#008d4a] rounded-full"></div>}
+           {activeTab === "history" && <div className="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-full"></div>}
          </button>
       </div>
 
@@ -187,46 +187,46 @@ export default function PayoutPage() {
            
            {/* 3 Balanced Cards */}
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#f2f0ff] rounded-[24px] p-8 border border-[#e5e1ff] flex flex-col justify-between min-h-[180px]">
+              <div className="bg-[#f2f0ff] dark:bg-card rounded-[24px] p-8 border border-[#e5e1ff] dark:border-border flex flex-col justify-between min-h-[180px]">
                  <div>
                     <span className="text-[12px] font-black uppercase text-indigo-400 tracking-widest mb-1 block">Available Balance</span>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none">NPR {stats.currentBalance.toLocaleString('en-NP', { minimumFractionDigits: 2 })}</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tight leading-none">NPR {stats.currentBalance.toLocaleString('en-NP', { minimumFractionDigits: 2 })}</h2>
                  </div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Total Balance for withdraw</p>
+                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Total Balance for withdraw</p>
               </div>
 
-              <div className="bg-[#fefce8] rounded-[24px] p-8 border border-[#fef9c3] flex flex-col justify-between min-h-[180px]">
+              <div className="bg-[#fefce8] dark:bg-card rounded-[24px] p-8 border border-[#fef9c3] dark:border-border flex flex-col justify-between min-h-[180px]">
                  <div>
                     <span className="text-[12px] font-black uppercase text-yellow-500 tracking-widest mb-1 block">Payout Processing</span>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none">NPR {processingBalance.toLocaleString('en-NP', { minimumFractionDigits: 2 })}</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tight leading-none">NPR {processingBalance.toLocaleString('en-NP', { minimumFractionDigits: 2 })}</h2>
                  </div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Balanced on hold for payout requests</p>
+                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Balanced on hold for payout requests</p>
               </div>
 
-              <div className="bg-[#fff1f2] rounded-[24px] p-8 border border-[#ffe4e6] flex flex-col justify-between min-h-[180px]">
+              <div className="bg-[#fff1f2] dark:bg-card rounded-[24px] p-8 border border-[#ffe4e6] dark:border-border flex flex-col justify-between min-h-[180px]">
                  <div>
                     <span className="text-[12px] font-black uppercase text-rose-400 tracking-widest mb-1 block">Card hold balance</span>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-none">NPR 0.00</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tight leading-none">NPR 0.00</h2>
                  </div>
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">Balanced on hold for VISA / Mastercard</p>
+                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none">Balanced on hold for VISA / Mastercard</p>
               </div>
            </div>
 
            {/* Payout Method Section */}
            <div className="flex flex-col gap-6">
-              <h3 className="text-sm font-black text-gray-900 tracking-tight">Payout Method</h3>
+              <h3 className="text-sm font-black text-foreground tracking-tight">Payout Method</h3>
               <div className="flex flex-col lg:flex-row gap-6">
                  
                  {/* Existing Method Card */}
                  {profile?.payoutDetails?.accountNumber ? (
-                    <div className="flex-1 bg-[#f0fdf4] border-2 border-[#008d4a] rounded-[28px] p-8 flex flex-col gap-6 relative group transition-all shadow-sm">
+                    <div className="flex-1 bg-muted/20 border-2 border-primary rounded-[28px] p-8 flex flex-col gap-6 relative group transition-all shadow-sm">
                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                             <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm font-black text-[#008d4a] text-xs flex items-center justify-center">Sah.</div>
-                             <span className="font-black text-gray-900 text-lg">Khalti</span>
+                             <div className="w-10 h-10 rounded-xl bg-card border border-border shadow-sm font-black text-primary text-xs flex items-center justify-center">Sah.</div>
+                             <span className="font-black text-foreground text-lg">Khalti</span>
                           </div>
                           <div className="flex items-center gap-2">
-                             <span className="text-[10px] font-black text-[#008d4a] bg-white px-3 py-1 rounded-full uppercase tracking-widest border border-green-100">Verified</span>
+                             <span className="text-[10px] font-black text-primary bg-background px-3 py-1 rounded-full uppercase tracking-widest border border-primary/20">Verified</span>
                              <button 
                                onClick={() => {
                                   setSetupMethod(profile.payoutDetails.method || "KHALTI");
@@ -237,7 +237,7 @@ export default function PayoutPage() {
                                   setIsSettingUp(true);
                                   setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
                                }}
-                               className="p-1.5 hover:bg-white rounded-lg text-gray-400 hover:text-[#008d4a] transition-all"
+                               className="p-1.5 hover:bg-background rounded-lg text-muted-foreground hover:text-primary transition-all"
                              >
                                 <Settings2 className="w-4 h-4" />
                              </button>
@@ -245,18 +245,18 @@ export default function PayoutPage() {
                        </div>
                        <div className="flex flex-col gap-2">
                           <div className="flex flex-col gap-0.5">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] leading-none">Account Name</span>
-                             <p className="font-black text-gray-700 text-md tracking-tight">{profile.payoutDetails.accountName}</p>
+                             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none">Account Name</span>
+                             <p className="font-black text-foreground text-md tracking-tight">{profile.payoutDetails.accountName}</p>
                           </div>
                           <div className="flex flex-col gap-0.5 mt-2">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] leading-none">Account Number</span>
-                             <p className="font-black text-gray-700 text-md tracking-tight">{profile.payoutDetails.accountNumber}</p>
+                             <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em] leading-none">Account Number</span>
+                             <p className="font-black text-foreground text-md tracking-tight">{profile.payoutDetails.accountNumber}</p>
                           </div>
                        </div>
                     </div>
                  ) : (
-                    <div className="flex-1 bg-gray-50 border-2 border-dashed border-gray-200 rounded-[28px] p-10 flex flex-col items-center justify-center gap-2 opacity-50">
-                       <p className="text-xs font-black text-gray-400 uppercase tracking-widest">No payout method configured</p>
+                    <div className="flex-1 bg-muted border-2 border-dashed border-border rounded-[28px] p-10 flex flex-col items-center justify-center gap-2 opacity-50">
+                       <p className="text-xs font-black text-muted-foreground uppercase tracking-widest">No payout method configured</p>
                     </div>
                  )}
 
@@ -266,34 +266,34 @@ export default function PayoutPage() {
                        setIsSettingUp(true);
                        setTimeout(() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
                     }}
-                    className="flex-1 bg-gray-50 border-2 border-dashed border-gray-100 rounded-[28px] flex flex-col items-center justify-center gap-3 p-10 cursor-pointer group hover:bg-gray-100 hover:border-gray-300 transition-all shadow-sm"
+                    className="flex-1 bg-muted/40 border-2 border-dashed border-border rounded-[28px] flex flex-col items-center justify-center gap-3 p-10 cursor-pointer group hover:bg-muted transition-all shadow-sm"
                  >
-                    <div className="w-14 h-14 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-400 group-hover:bg-[#008d4a] group-hover:text-white group-hover:border-[#008d4a] transition-all">
+                    <div className="w-14 h-14 rounded-full border-2 border-border flex items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all">
                        <Plus className="w-6 h-6 stroke-[3]" />
                     </div>
-                    <span className="text-sm font-black text-gray-400 uppercase tracking-widest group-hover:text-gray-900">Add New Payout Method</span>
+                    <span className="text-sm font-black text-muted-foreground uppercase tracking-widest group-hover:text-foreground">Add New Payout Method</span>
                  </div>
               </div>
            </div>
 
            {/* Setup Popover Form (Dynamic) */}
            {isSettingUp && (
-              <div ref={formRef} className="bg-white border-2 border-[#008d4a20] rounded-[40px] p-10 shadow-[0_50px_100px_rgba(0,0,0,0.1)] flex flex-col gap-8 animate-in zoom-in-95 scroll-mt- transition-all duration-700 h-fit overflow-hidden">
+              <div ref={formRef} className="bg-card border-2 border-primary/20 rounded-[40px] p-10 shadow-2xl flex flex-col gap-8 animate-in zoom-in-95 scroll-mt- transition-all duration-700 h-fit overflow-hidden">
                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-gray-900 tracking-tight">Configure Payout Account</h3>
-                    <button onClick={() => setIsSettingUp(false)} className="text-gray-300 hover:text-gray-500 transition-colors"><X className="w-6 h-6" /></button>
+                    <h3 className="text-xl font-black text-foreground tracking-tight">Configure Payout Account</h3>
+                    <button onClick={() => setIsSettingUp(false)} className="text-muted-foreground hover:text-foreground transition-colors"><X className="w-6 h-6" /></button>
                  </div>
                  
                  <div className="grid grid-cols-2 gap-4">
                     <button 
                       onClick={() => setSetupMethod("KHALTI")}
-                      className={`py-4 rounded-2xl border-2 font-black text-sm flex items-center justify-center gap-3 transition-all ${setupMethod === 'KHALTI' ? 'border-[#008d4a] bg-[#008d4a05] text-[#008d4a]' : 'border-gray-50 text-gray-400 hover:bg-gray-50'}`}
+                      className={`py-4 rounded-2xl border-2 font-black text-sm flex items-center justify-center gap-3 transition-all ${setupMethod === 'KHALTI' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-muted'}`}
                     >
                       <CreditCard className="w-5 h-5" /> Khalti
                     </button>
                     <button 
                       onClick={() => setSetupMethod("BANK")}
-                      className={`py-4 rounded-2xl border-2 font-black text-sm flex items-center justify-center gap-3 transition-all ${setupMethod === 'BANK' ? 'border-[#008d4a] bg-[#008d4a05] text-[#008d4a]' : 'border-gray-50 text-gray-400 hover:bg-gray-50'}`}
+                      className={`py-4 rounded-2xl border-2 font-black text-sm flex items-center justify-center gap-3 transition-all ${setupMethod === 'BANK' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-muted'}`}
                     >
                       <Building2 className="w-5 h-5" /> Bank Transfer
                     </button>
@@ -301,17 +301,17 @@ export default function PayoutPage() {
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Account Holder Name</label>
-                       <input value={setupData.accountName} onChange={e => setSetupData({...setupData, accountName: e.target.value})} placeholder="Full name registered on account" className="w-full bg-gray-50 p-5 rounded-[22px] font-black text-md outline-none focus:ring-2 focus:ring-[#008d4a20] focus:bg-white transition-all" />
+                       <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest ml-1">Account Holder Name</label>
+                       <input value={setupData.accountName} onChange={e => setSetupData({...setupData, accountName: e.target.value})} placeholder="Full name registered on account" className="w-full bg-muted text-foreground p-5 rounded-[22px] font-black text-md outline-none focus:ring-2 focus:ring-primary/20 focus:bg-background transition-all" />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">{setupMethod === 'KHALTI' ? 'Mobile Number' : 'Account/IBAN No.'}</label>
-                       <input value={setupData.accountNumber} onChange={e => setSetupData({...setupData, accountNumber: e.target.value})} placeholder={setupMethod === 'KHALTI' ? "98xxxxxxxx" : "Account Number"} className="w-full bg-gray-50 p-5 rounded-[22px] font-black text-md outline-none focus:ring-2 focus:ring-[#008d4a20] focus:bg-white transition-all" />
+                       <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest ml-1">{setupMethod === 'KHALTI' ? 'Mobile Number' : 'Account/IBAN No.'}</label>
+                       <input value={setupData.accountNumber} onChange={e => setSetupData({...setupData, accountNumber: e.target.value})} placeholder={setupMethod === 'KHALTI' ? "98xxxxxxxx" : "Account Number"} className="w-full bg-muted text-foreground p-5 rounded-[22px] font-black text-md outline-none focus:ring-2 focus:ring-primary/20 focus:bg-background transition-all" />
                     </div>
                  </div>
 
-                 <button onClick={handleSavePayoutMethod} disabled={isSubmitting} className="bg-gray-900 text-white py-5 rounded-[22px] font-black text-lg flex items-center justify-center gap-3">
-                   {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5 text-[#008d4a]" />}
+                 <button onClick={handleSavePayoutMethod} disabled={isSubmitting} className="bg-foreground text-background py-5 rounded-[22px] font-black text-lg flex items-center justify-center gap-3">
+                   {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5 text-background fill-primary" />}
                    Link Verified Method
                  </button>
               </div>
@@ -321,22 +321,22 @@ export default function PayoutPage() {
            <div className="flex flex-col gap-8">
               <div className="space-y-4">
                  <div className="space-y-2">
-                    <label className="text-sm font-black text-gray-900 tracking-tight ml-1">Amount</label>
+                    <label className="text-sm font-black text-foreground tracking-tight ml-1">Amount</label>
                     <input 
                        type="number" 
                        value={amount}
                        onChange={e => setAmount(Number(e.target.value))}
                        placeholder="Enter amount to withdraw..." 
-                       className="w-full bg-gray-50 border border-gray-100 p-5 rounded-[24px] font-black text-2xl outline-none focus:ring-4 focus:ring-emerald-500/5 focus:bg-white transition-all tracking-tight" 
+                       className="w-full bg-muted border border-border p-5 rounded-[24px] font-black text-2xl outline-none focus:ring-4 focus:ring-primary/20 focus:bg-background text-foreground transition-all tracking-tight" 
                     />
                  </div>
                  <div className="space-y-2">
-                    <label className="text-sm font-black text-gray-900 tracking-tight ml-1">Remark</label>
+                    <label className="text-sm font-black text-foreground tracking-tight ml-1">Remark</label>
                     <textarea 
                        value={remarks}
                        onChange={e => setRemarks(e.target.value)}
                        placeholder="Optional remarks..." 
-                       className="w-full bg-gray-50 border border-gray-100 p-5 rounded-[24px] font-black text-lg min-h-[180px] outline-none focus:ring-4 focus:ring-emerald-500/5 focus:bg-white transition-all resize-none" 
+                       className="w-full bg-muted border border-border p-5 rounded-[24px] font-black text-lg min-h-[180px] outline-none focus:ring-4 focus:ring-primary/20 focus:bg-background text-foreground transition-all resize-none" 
                     />
                  </div>
               </div>
@@ -354,31 +354,31 @@ export default function PayoutPage() {
       ) : (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-top-2 duration-500">
            {/* Dynamic Payout History Table */}
-           <div className="bg-white border border-gray-100 rounded-[40px] overflow-hidden shadow-sm">
+           <div className="bg-card border border-border rounded-[40px] overflow-hidden shadow-sm">
               <table className="w-full text-left">
                  <thead>
-                    <tr className="bg-gray-50/50 border-b border-gray-50">
-                       <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Requested On</th>
-                       <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Method</th>
-                       <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                       <th className="px-10 py-6 text-right text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Amount</th>
+                    <tr className="bg-muted border-b border-border">
+                       <th className="px-10 py-6 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Requested On</th>
+                       <th className="px-10 py-6 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Method</th>
+                       <th className="px-10 py-6 text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Status</th>
+                       <th className="px-10 py-6 text-right text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">Amount</th>
                     </tr>
                  </thead>
                  <tbody>
                     {payouts.length === 0 ? (
-                       <tr><td colSpan={4} className="px-10 py-24 text-center text-gray-400 italic">No payout history found on this account.</td></tr>
+                       <tr><td colSpan={4} className="px-10 py-24 text-center text-muted-foreground italic">No payout history found on this account.</td></tr>
                     ) : payouts.map((p) => (
-                       <tr key={p._id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50/30 transition-all">
+                       <tr key={p._id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-all">
                           <td className="px-10 py-8">
                              <div className="flex items-center gap-3">
-                                <History className="w-5 h-5 text-gray-300" />
-                                <span className="font-black text-gray-900 tracking-tight text-md">
+                                <History className="w-5 h-5 text-muted-foreground/50" />
+                                <span className="font-black text-foreground tracking-tight text-md">
                                    {new Date(p.createdAt).toLocaleDateString('en-NP', { day: 'numeric', month: 'short', year: 'numeric' })}
                                 </span>
                              </div>
                           </td>
                           <td className="px-10 py-8">
-                             <span className="text-[10px] font-black bg-emerald-50 text-[#008d4a] px-3 py-1 rounded-full uppercase tracking-widest border border-green-100">{p.payoutMethod}</span>
+                             <span className="text-[10px] font-black bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-widest border border-primary/20">{p.payoutMethod}</span>
                           </td>
                           <td className="px-10 py-8">
                              <div className={`flex items-center gap-2 text-xs font-black tracking-tight ${
@@ -393,7 +393,7 @@ export default function PayoutPage() {
                              </div>
                           </td>
                           <td className="px-10 py-8 text-right">
-                             <span className="font-black text-gray-900 text-lg tracking-tighter">NPR {p.amountNPR.toLocaleString()}</span>
+                             <span className="font-black text-foreground text-lg tracking-tighter">NPR {p.amountNPR.toLocaleString()}</span>
                           </td>
                        </tr>
                     ))}

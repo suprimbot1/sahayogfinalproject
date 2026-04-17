@@ -117,23 +117,23 @@ export default function LinkInBioPage() {
   const publicUrl = `sahayog.host/${profile.username}`;
 
   return (
-    <div className="flex flex-col gap-6 max-w-[1400px] mx-auto min-h-screen bg-white pb-20 px-4 md:px-10">
+    <div className="flex flex-col gap-6 max-w-[1400px] mx-auto min-h-screen bg-background pb-20 px-4 md:px-10">
       
       {/* Top Navbar Actions */}
-      <div className="flex items-center justify-end gap-3 w-full border-b border-gray-100 pb-4 pt-4">
-         <div className="hidden md:flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2.5 min-w-[320px]">
-            <Globe className="w-4 h-4 text-gray-400" />
-            <span className="text-sm font-bold text-gray-400">https://{publicUrl}</span>
-            <ChevronDown className="w-4 h-4 text-gray-400 ml-auto" />
+      <div className="flex items-center justify-end gap-3 w-full border-b border-border pb-4 pt-4">
+         <div className="hidden md:flex items-center gap-2 bg-muted border border-border rounded-lg px-4 py-2.5 min-w-[320px]">
+            <Globe className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-bold text-muted-foreground">https://{publicUrl}</span>
+            <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
          </div>
          <div className="flex items-center gap-2">
-            <button onClick={() => { navigator.clipboard.writeText(publicUrl); alert("Copied Profile URL!"); }} className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-               <Copy className="w-4 h-4 text-gray-500" />
+            <button onClick={() => { navigator.clipboard.writeText(publicUrl); alert("Copied Profile URL!"); }} className="p-2.5 bg-muted border border-border rounded-lg hover:bg-muted/80 transition-colors">
+               <Copy className="w-4 h-4 text-muted-foreground" />
             </button>
-            <button onClick={() => window.open(`/links/${profile.username}`)} className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-               <ExternalLink className="w-4 h-4 text-gray-500" />
+            <button onClick={() => window.open(`/links/${profile.username}`)} className="p-2.5 bg-muted border border-border rounded-lg hover:bg-muted/80 transition-colors">
+               <ExternalLink className="w-4 h-4 text-muted-foreground" />
             </button>
-            <button onClick={handleSave} className="bg-[#008d4a] text-white px-8 py-2.5 rounded-lg font-black text-sm shadow-lg hover:bg-[#007a40] transition-all flex items-center gap-2">
+            <button onClick={handleSave} className="bg-primary text-primary-foreground px-8 py-2.5 rounded-lg font-black text-sm shadow-lg border border-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
                {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : "Share"}
             </button>
          </div>
@@ -146,19 +146,19 @@ export default function LinkInBioPage() {
            
            {/* Profile Block */}
            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
-              <div className="w-32 h-32 rounded-full bg-[#f0fcf7] flex items-center justify-center text-[#008d4a] text-5xl font-black border-4 border-white shadow-xl overflow-hidden">
+              <div className="w-32 h-32 rounded-full bg-[#f0fcf7] dark:bg-[#0F1E19] flex items-center justify-center text-[#008d4a] dark:text-[#23C973] text-5xl font-black border-4 border-background shadow-xl overflow-hidden shrink-0">
                  {profile.profileImage ? (
                    <img src={profile.profileImage} className="w-full h-full object-cover" />
                  ) : profile.username.charAt(0).toUpperCase()}
               </div>
-              <div className="flex-1 flex flex-col gap-6 text-center sm:text-left">
+              <div className="flex-1 flex flex-col gap-6 text-center sm:text-left w-full">
                  <div>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tighter">@{profile.username}</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tighter">@{profile.username}</h2>
                     <input 
                        type="text" 
                        value={profile.slogan || ""} 
                        onChange={(e) => setProfile({...profile, slogan: e.target.value})}
-                       className="text-lg font-bold text-gray-400 bg-transparent border-none focus:ring-0 p-0 w-full placeholder:opacity-30 mt-1"
+                       className="text-lg font-bold text-muted-foreground bg-transparent border-none focus:ring-0 p-0 w-full placeholder:opacity-30 mt-1"
                        placeholder="A short bio about you"
                     />
                  </div>
@@ -170,12 +170,12 @@ export default function LinkInBioPage() {
                        return (
                           <div key={social.id} className="relative group cursor-pointer" onClick={() => openSocialEditor(social.id)}>
                              <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                               isLinked ? "bg-[#008d4a15] text-[#008d4a] border-2 border-[#008d4a20]" : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                               isLinked ? "bg-[#008d4a15] text-[#008d4a] border-2 border-[#008d4a20]" : "bg-muted text-muted-foreground hover:bg-muted/80"
                              }`}>
                                 <social.icon className="w-[18px] h-[18px]" />
                              </div>
-                             <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm ${
-                                isLinked ? "bg-emerald-500" : "bg-gray-300"
+                             <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center border-2 border-background shadow-sm ${
+                                isLinked ? "bg-[#008d4a]" : "bg-muted-foreground/30"
                              }`}>
                                 <Plus className={`w-3 h-3 text-white ${isLinked ? "rotate-45" : ""}`} />
                              </div>
@@ -213,26 +213,26 @@ export default function LinkInBioPage() {
            {/* Dynamic Links List */}
            <div className="flex flex-col gap-5">
               {profile.bioLinks?.length === 0 ? (
-                <div className="py-12 border-2 border-dashed border-gray-100 rounded-[32px] flex flex-col items-center justify-center opacity-30">
-                   <Zap className="w-8 h-8 mb-2" />
-                   <p className="text-sm font-bold uppercase tracking-widest leading-none">No custom links yet</p>
+                <div className="py-12 border-2 border-dashed border-border rounded-[32px] flex flex-col items-center justify-center opacity-30 text-foreground">
+                   <Zap className="w-8 h-8 mb-2 text-muted-foreground" />
+                   <p className="text-sm font-bold uppercase tracking-widest leading-none text-muted-foreground">No custom links yet</p>
                 </div>
               ) : profile.bioLinks.map((link: any, i: number) => (
-                <div key={i} className={`group bg-white border rounded-[32px] p-6 flex flex-col sm:flex-row items-center justify-between transition-all hover:shadow-2xl hover:shadow-emerald-500/5 ${link.active ? "border-gray-100" : "border-gray-200 grayscale opacity-60"}`}>
+                <div key={i} className={`group bg-card border rounded-[32px] p-6 flex flex-col sm:flex-row items-center justify-between transition-all hover:shadow-2xl hover:shadow-emerald-500/5 ${link.active ? "border-border" : "border-border grayscale opacity-60"}`}>
                    <div className="flex items-center gap-6">
-                      <div className="w-12 h-12 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 group-hover:text-[#008d4a] transition-colors">
+                      <div className="w-12 h-12 bg-muted border border-border rounded-2xl flex items-center justify-center text-muted-foreground group-hover:text-[#008d4a] transition-colors shrink-0">
                         <Globe className="w-6 h-6" />
                       </div>
                       <div className="flex flex-col">
-                         <span className="font-black text-lg text-gray-900 tracking-tight">{link.title || "Untitled Link"}</span>
-                         <span className="text-xs font-bold text-gray-400 truncate max-w-[200px]">{link.url}</span>
+                         <span className="font-black text-lg text-foreground tracking-tight">{link.title || "Untitled Link"}</span>
+                         <span className="text-xs font-bold text-muted-foreground truncate max-w-[200px]">{link.url}</span>
                       </div>
                    </div>
                    <div className="flex items-center gap-6 mt-4 sm:mt-0">
-                      <button onClick={() => removeLink(i)} className="text-gray-200 hover:text-rose-500 transition-colors p-2"><Trash2 className="w-5 h-5" /></button>
+                      <button onClick={() => removeLink(i)} className="text-muted-foreground/30 hover:text-rose-500 transition-colors p-2"><Trash2 className="w-5 h-5" /></button>
                       <button 
                         onClick={() => toggleLinkActive(i)}
-                        className={`w-12 h-7 rounded-full relative transition-all ${link.active ? "bg-[#008d4a]" : "bg-gray-200"}`}
+                        className={`w-12 h-7 rounded-full relative transition-all shadow-inner ${link.active ? "bg-[#008d4a]" : "bg-muted-foreground/20"}`}
                       >
                          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all shadow-sm ${link.active ? "right-1" : "left-1"}`}></div>
                       </button>
@@ -243,20 +243,20 @@ export default function LinkInBioPage() {
 
            {/* Add Link Form Modal-ish */}
            {showAddForm && (
-              <div className="bg-white border-4 border-emerald-500/10 rounded-[40px] p-8 shadow-[0_50px_100px_rgba(0,0,0,0.1)] space-y-6 animate-in zoom-in-95">
+              <div className="bg-card border-4 border-primary/10 rounded-[40px] p-8 shadow-2xl space-y-6 animate-in zoom-in-95">
                  <div className="flex flex-col gap-4">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Link Label</label>
-                       <input value={newLink.title} onChange={e => setNewLink({...newLink, title: e.target.value})} placeholder="e.g. Subscribe on YouTube" className="bg-gray-50 p-5 rounded-[22px] font-bold text-lg focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
+                       <label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] ml-2">Link Label</label>
+                       <input value={newLink.title} onChange={e => setNewLink({...newLink, title: e.target.value})} placeholder="e.g. Subscribe on YouTube" className="bg-muted text-foreground p-5 rounded-[22px] font-bold text-lg focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
                     </div>
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] ml-2">Destination URL</label>
-                       <input value={newLink.url} onChange={e => setNewLink({...newLink, url: e.target.value})} placeholder="https://..." className="bg-gray-50 p-5 rounded-[22px] font-medium text-md focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
+                       <label className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] ml-2">Destination URL</label>
+                       <input value={newLink.url} onChange={e => setNewLink({...newLink, url: e.target.value})} placeholder="https://..." className="bg-muted text-foreground p-5 rounded-[22px] font-medium text-md focus:ring-2 focus:ring-[#008d4a] w-full outline-none" />
                     </div>
                  </div>
                  <div className="flex justify-end gap-3 pt-4">
-                    <button onClick={() => setShowAddForm(false)} className="text-gray-400 font-black px-6 text-sm">Cancel</button>
-                    <button onClick={addLink} className="bg-[#008d4a] shadow-lg shadow-emerald-500/20 text-white px-12 py-3 rounded-[18px] font-black">Add to Bio</button>
+                    <button onClick={() => setShowAddForm(false)} className="text-muted-foreground font-black px-6 text-sm">Cancel</button>
+                    <button onClick={addLink} className="bg-[#008d4a] shadow-lg shadow-emerald-500/20 text-white px-12 py-3 rounded-[18px] font-black hover:bg-[#007a40] transition-colors">Add to Bio</button>
                  </div>
               </div>
            )}

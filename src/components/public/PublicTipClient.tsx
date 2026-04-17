@@ -110,7 +110,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
   return (
     <div className="w-full flex flex-col">
       {/* Hero Card */}
-      <div className="w-full bg-white rounded-3xl border border-border shadow-sm mt-8 overflow-hidden">
+      <div className="w-full bg-white dark:bg-card/50 backdrop-blur-3xl rounded-3xl border border-slate-200 dark:border-border/50 shadow-sm mt-8 overflow-hidden transition-colors">
         {/* Cover Image */}
         <div 
           className="w-full h-48 md:h-64 bg-primary/20 bg-center bg-cover bg-no-repeat relative"
@@ -119,7 +119,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
 
         <div className="px-6 md:px-10 relative pt-4 pb-0">
           {/* Avatar Base */}
-          <div className="absolute -top-16 md:-top-20 left-6 md:left-10 w-28 h-28 md:w-32 md:h-32 rounded-3xl overflow-hidden border-4 border-white shadow-md bg-white">
+          <div className="absolute -top-16 md:-top-20 left-6 md:left-10 w-28 h-28 md:w-32 md:h-32 rounded-3xl overflow-hidden border-4 border-white dark:border-background shadow-md bg-white dark:bg-background">
              <img src={profileImage} alt={profile?.username} className="w-full h-full object-cover" />
           </div>
           
@@ -139,7 +139,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
             <button
               onClick={() => setActiveTab("about")}
               className={`pb-4 text-[15px] font-bold relative transition-colors ${
-                activeTab === "about" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                activeTab === "about" ? "text-primary" : "text-slate-500 dark:text-muted-foreground hover:text-slate-900 dark:hover:text-foreground"
               }`}
             >
               About
@@ -150,7 +150,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
             <button
               onClick={() => setActiveTab("tips")}
               className={`pb-4 text-[15px] font-bold relative transition-colors ${
-                activeTab === "tips" ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                activeTab === "tips" ? "text-primary" : "text-slate-500 dark:text-muted-foreground hover:text-slate-900 dark:hover:text-foreground"
               }`}
             >
               Tips
@@ -164,7 +164,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
 
       {/* Dynamic Grid Context */}
       {activeTab === "about" && (
-        <div className="mt-8 bg-white rounded-3xl border border-border p-8 min-h-[300px]">
+        <div className="mt-8 bg-white dark:bg-card/50 backdrop-blur-3xl rounded-3xl border border-slate-200 dark:border-border/50 p-8 min-h-[300px] transition-colors">
            <h2 className="text-xl font-bold mb-4">About {displayUsername}</h2>
            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
              {profile?.about || "This creator hasn't written an about section yet."}
@@ -177,7 +177,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
           
           {/* Tip Form Left Column */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl border border-border shadow-sm p-6 md:p-8 flex flex-col gap-6">
+            <div className="bg-white dark:bg-card/50 backdrop-blur-3xl rounded-3xl border border-slate-200 dark:border-border/50 shadow-sm p-6 md:p-8 flex flex-col gap-6 transition-colors">
               
               {/* Username Input */}
               <div className="flex flex-col gap-2">
@@ -187,7 +187,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
                   value={supporterName}
                   onChange={(e) => setSupporterName(e.target.value)}
                   placeholder="Your Name (e.g. Ayush)"
-                  className="w-full bg-transparent border border-border rounded-xl p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  className="w-full bg-white/50 dark:bg-background/50 border border-slate-200 dark:border-border/50 rounded-xl p-3.5 text-sm font-medium text-slate-900 dark:text-foreground placeholder:text-slate-400 dark:placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                 />
                 <p className="text-[13px] text-muted-foreground mt-0.5">Use proper username to standout in leaderboard.</p>
               </div>
@@ -201,7 +201,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className="w-full bg-transparent border border-border rounded-xl p-3.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all pr-12"
+                    className="w-full bg-white/50 dark:bg-background/50 border border-slate-200 dark:border-border/50 rounded-xl p-3.5 text-sm font-medium text-slate-900 dark:text-foreground placeholder:text-slate-400 dark:placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all pr-12"
                     suppressHydrationWarning
                   />
                   <Mail className="w-5 h-5 text-primary absolute right-4 top-[14px]" />
@@ -212,16 +212,16 @@ export function PublicTipClient({ profile }: { profile: any }) {
               <div className="flex flex-col gap-3">
                 <label className="text-sm font-bold text-foreground">Amount</label>
                 <div className="flex w-full">
-                  <div className="border border-border border-r-0 rounded-l-xl px-4 flex items-center gap-2 bg-transparent shrink-0">
+                  <div className="border border-slate-200 dark:border-border/50 border-r-0 rounded-l-xl px-4 flex items-center gap-2 bg-slate-50 dark:bg-muted/20 shrink-0">
                      <span className="text-lg">🇳🇵</span>
-                     <span className="font-bold text-sm">NPR</span>
-                     <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                     <span className="font-bold text-sm text-slate-600 dark:text-muted-foreground">NPR</span>
+                     <svg className="w-4 h-4 text-slate-400 dark:text-muted-foreground/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </div>
                   <input 
                     type="number" 
                     value={selectedAmount}
                     onChange={(e) => setSelectedAmount(Number(e.target.value))}
-                    className="w-full bg-transparent border border-border rounded-r-xl p-3.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                    className="w-full bg-white/50 dark:bg-background/50 border border-slate-200 dark:border-border/50 rounded-r-xl p-3.5 text-sm font-bold text-slate-900 dark:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   />
                 </div>
                 
@@ -233,8 +233,8 @@ export function PublicTipClient({ profile }: { profile: any }) {
                       onClick={() => setSelectedAmount(amt)}
                       className={`px-4 py-2 rounded-full border text-sm font-bold transition-all ${
                         selectedAmount === amt 
-                        ? "border-primary bg-primary/10 text-primary" 
-                        : "border-border bg-white text-foreground hover:border-border/80 hover:bg-muted"
+                        ? "border-primary dark:border-primary/50 bg-primary/10 text-primary" 
+                        : "border-slate-200 dark:border-border/50 bg-white dark:bg-background/50 text-slate-600 dark:text-muted-foreground hover:border-slate-300 dark:hover:border-border hover:bg-slate-50 dark:hover:bg-muted dark:hover:text-foreground"
                       }`}
                     >
                        Rs. {amt}
@@ -251,7 +251,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
                   onChange={(e) => setMessage(e.target.value)}
                   maxLength={profile?.settings?.maxMessageLength || 99}
                   placeholder="Enter your message"
-                  className="w-full bg-transparent border border-border rounded-xl p-3.5 text-sm font-medium min-h-[120px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y"
+                  className="w-full bg-white/50 dark:bg-background/50 border border-slate-200 dark:border-border/50 rounded-xl p-3.5 text-sm font-medium text-slate-900 dark:text-foreground placeholder:text-slate-400 dark:placeholder:text-muted-foreground/50 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y"
                 ></textarea>
                 <div className="text-right text-[13px] text-muted-foreground font-medium">
                   {message.length} / {profile?.settings?.maxMessageLength || 99} characters
@@ -261,7 +261,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
               {/* TOS and Submit */}
               <div className="flex flex-col gap-5 mt-2">
                 <div className="flex items-center gap-3 cursor-pointer" onClick={() => setTermsAgreed(!termsAgreed)}>
-                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${termsAgreed ? 'bg-primary border-primary' : 'border-input bg-background/50'}`}>
+                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${termsAgreed ? 'bg-primary border-primary' : 'border-border bg-card/50'}`}>
                     {termsAgreed && <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                   </div>
                   <span className="text-sm font-bold text-foreground">I agree to all the Terms and Conditions</span>
@@ -281,7 +281,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
 
           {/* Widgets Right Column */}
           <div className="lg:col-span-1 flex flex-col gap-6">
-            <div className="bg-white rounded-3xl border border-border shadow-sm p-6">
+            <div className="bg-white dark:bg-card/50 backdrop-blur-3xl rounded-3xl border border-slate-200 dark:border-border/50 shadow-sm p-6 transition-colors">
               <h3 className="font-bold text-lg text-foreground mb-4">Leaderboard</h3>
               
               <div className="flex items-center justify-between border-b border-border/50 text-[13px] font-bold text-muted-foreground mb-6">
@@ -289,7 +289,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
                   <button 
                     key={p}
                     onClick={() => setLeaderboardPeriod(p)}
-                    className={`pb-3 capitalize transition-all ${leaderboardPeriod === p ? "text-primary border-b-2 border-primary" : "hover:text-foreground"}`}
+                    className={`pb-3 capitalize transition-all ${leaderboardPeriod === p ? "text-primary border-b-2 border-primary" : "text-slate-500 dark:text-muted-foreground hover:text-slate-900 dark:hover:text-foreground"}`}
                   >
                     {p === "allTime" ? "All Time" : p}
                   </button>
@@ -312,9 +312,9 @@ export function PublicTipClient({ profile }: { profile: any }) {
                  </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-10 gap-2 text-center opacity-70">
-                    <div className="w-24 h-24 mb-2 bg-gradient-to-b from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden">
+                    <div className="w-24 h-24 mb-2 bg-gradient-to-b from-muted to-muted/50 rounded-2xl flex items-center justify-center shadow-inner relative overflow-hidden">
                     <span className="text-5xl drop-shadow-md relative z-10">🐷</span>
-                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-white/40 blur-xl"></div>
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-background/40 blur-xl"></div>
                     </div>
                     <h4 className="font-black text-lg text-foreground">No tips received</h4>
                     <p className="text-sm text-muted-foreground max-w-[200px]">Be the first one to climb up the leaderboard</p>
@@ -323,13 +323,13 @@ export function PublicTipClient({ profile }: { profile: any }) {
             </div>
 
             {/* Latest Supporters Card */}
-            <div className="bg-white rounded-3xl border border-border shadow-sm p-0 overflow-hidden">
+            <div className="bg-white dark:bg-card/50 backdrop-blur-3xl rounded-3xl border border-slate-200 dark:border-border/50 shadow-sm p-0 overflow-hidden transition-colors">
                <div className="px-6 py-5 border-b border-border/50">
                  <h3 className="font-bold text-[15px] text-foreground">Latest Supporters</h3>
                </div>
                
                <div className="flex flex-col">
-                 {recentTips.length > 0 ? recentTips.map((tip, idx) => (
+                 {recentTips.length > 0 ? recentTips.slice(0, 5).map((tip, idx) => (
                    <div key={idx} className="flex flex-col p-5 border-b border-border/20 last:border-0 hover:bg-muted/10 transition-colors gap-1">
                      <div className="flex justify-between items-center w-full">
                        <span className="text-sm font-bold text-foreground truncate">{tip.supporter?.name || "Anonymous"}</span>
@@ -347,9 +347,9 @@ export function PublicTipClient({ profile }: { profile: any }) {
                </div>
 
                {/* Pagination footer */}
-               <div className="p-4 flex items-center justify-center gap-4 bg-muted/5">
-                 <button className="w-8 h-8 rounded-full border border-border bg-white flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"><ChevronLeft className="w-4 h-4" /></button>
-                 <button className="w-8 h-8 rounded-full border border-border bg-white flex items-center justify-center hover:bg-muted transition-colors text-foreground"><ChevronRight className="w-4 h-4" /></button>
+               <div className="p-4 flex items-center justify-center gap-4 bg-slate-50 dark:bg-white/[0.02]">
+                 <button className="w-8 h-8 rounded-full border border-slate-200 dark:border-border/50 bg-white dark:bg-background/50 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-muted transition-colors text-slate-500 dark:text-muted-foreground"><ChevronLeft className="w-4 h-4" /></button>
+                 <button className="w-8 h-8 rounded-full border border-slate-200 dark:border-border/50 bg-white dark:bg-background/50 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-muted transition-colors text-slate-900 dark:text-foreground"><ChevronRight className="w-4 h-4" /></button>
                </div>
             </div>
 

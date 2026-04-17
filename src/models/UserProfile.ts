@@ -3,6 +3,8 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IUserProfile extends Document {
   userId: string;
   username: string; // The URL handle e.g. cr8.rs/username
+  role: 'CREATOR' | 'SUPER_ADMIN';
+  isActive: boolean; // Field to control login/banning
   coverImage?: string;
   profileImage?: string;
   about?: string;
@@ -22,6 +24,8 @@ const UserProfileSchema: Schema = new Schema(
   {
     userId: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
+    role: { type: String, enum: ['CREATOR', 'SUPER_ADMIN'], default: 'CREATOR' },
+    isActive: { type: Boolean, default: true },
     coverImage: { type: String },
     profileImage: { type: String },
     about: { type: String },

@@ -31,8 +31,8 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-8">
       {/* Header section */}
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-full overflow-hidden bg-pink-100 flex items-center justify-center shrink-0">
-          <span className="text-xl font-bold text-pink-700">SA</span>
+        <div className="w-12 h-12 rounded-full overflow-hidden bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center shrink-0">
+          <span className="text-xl font-bold text-pink-700 dark:text-pink-400">SA</span>
         </div>
         <div>
           <h1 className="text-xl font-bold text-foreground">Hello, {session?.user?.name || "Creator"}</h1>
@@ -73,7 +73,7 @@ export default function DashboardPage() {
             {/* Step 1 */}
             <div className="flex items-center justify-between bg-primary/5 border-l-4 border-primary p-4 rounded-lg bg-card shadow-sm border border-border/50">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
                   <span className="text-lg">👤</span>
                 </div>
                 <div>
@@ -91,7 +91,7 @@ export default function DashboardPage() {
             {/* Step 2 */}
             <div className="flex items-center justify-between p-4 rounded-lg bg-card shadow-sm border border-border/50 ring-1 ring-primary/20">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
                   <span className="text-lg">🔗</span>
                 </div>
                 <div>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             {/* Step 3 */}
             <div className="flex items-center justify-between p-4 rounded-lg bg-card shadow-sm border border-border/50 bg-primary/5">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
                   <span className="text-lg">💵</span>
                 </div>
                 <div>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Add Social Links Banner */}
-        <div className="rounded-2xl bg-gradient-to-br from-[#e0fcf1] to-[#e7f7fd] p-6 flex flex-col justify-between overflow-hidden relative">
+        <div className="rounded-2xl bg-gradient-to-br from-[#e0fcf1] to-[#e7f7fd] dark:from-[#0A1A14] dark:to-[#0A121A] dark:border dark:border-white/5 p-6 flex flex-col justify-between overflow-hidden relative">
           <div className="z-10 relative space-y-2 mb-6">
             <h3 className="font-bold text-lg text-foreground">Add social links</h3>
             <p className="text-sm text-foreground/70 pr-12">
@@ -148,7 +148,7 @@ export default function DashboardPage() {
       {/* Balance Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Your Balance */}
-        <div className="bg-gradient-to-br from-[#dcfcf2] via-[#e5f8f5] to-[#cbf7ee] rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+        <div className="bg-gradient-to-br from-[#dcfcf2] via-[#e5f8f5] to-[#cbf7ee] dark:from-[#0F1412] dark:via-[#111917] dark:to-[#0B211A] dark:border dark:border-white/5 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px] shadow-sm">
           <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -172,7 +172,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Payout Processing */}
-        <div className="bg-gradient-to-br from-[#fef7df] via-[#fffbf2] to-[#ffeed2] rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+        <div className="bg-gradient-to-br from-[#fef7df] via-[#fffbf2] to-[#ffeed2] dark:from-[#13110C] dark:via-[#161411] dark:to-[#22170B] dark:border dark:border-white/5 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px] shadow-sm">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-sm font-semibold text-foreground/80">
@@ -187,7 +187,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Card hold balance */}
-        <div className="bg-gradient-to-br from-[#fae7e6] via-[#fcf0ef] to-[#fcdcdb] rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px]">
+        <div className="bg-gradient-to-br from-[#fae7e6] via-[#fcf0ef] to-[#fcdcdb] dark:from-[#140F0F] dark:via-[#191111] dark:to-[#220B0B] dark:border dark:border-white/5 rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between min-h-[160px] shadow-sm">
           <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-gradient-to-tr from-destructive/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
           <div>
             <div className="flex items-center gap-2 mb-1">

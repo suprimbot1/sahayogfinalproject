@@ -28,9 +28,9 @@ export default async function PublicPage(props: {
   const safeProfile = JSON.parse(JSON.stringify(profile));
 
   return (
-    <div className="min-h-screen bg-[#fbfdfc] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#fbfdfc] dark:bg-background flex flex-col font-sans transition-colors">
       {/* Top Brand Strip */}
-      <header className="w-full bg-white border-b border-border py-4 px-8 flex items-center justify-between z-10 relative">
+      <header className="w-full bg-white dark:bg-card border-b border-slate-200 dark:border-border py-4 px-8 flex items-center justify-between z-10 relative">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-lg">
             S

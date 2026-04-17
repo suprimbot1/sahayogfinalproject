@@ -8,16 +8,25 @@ export default function YoutubeBotPage() {
   const { data: session, status } = useSession();
   const [channelInfo, setChannelInfo] = useState<any>(null);
   const [isFetchingChannel, setIsFetchingChannel] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "authenticated") {
       setIsFetchingChannel(true);
+      setFetchError(null);
       fetch("/api/youtube/channel")
         .then(res => res.json())
         .then(data => {
           if (data.success) {
             setChannelInfo(data);
+          } else {
+            console.error("YouTube Channel API return:", data);
+            setFetchError(data.error || "Unknown Error");
           }
+        })
+        .catch(err => {
+          console.error("Failed to fetch Youtube channel", err);
+          setFetchError(err.message);
         })
         .finally(() => setIsFetchingChannel(false));
     }
@@ -54,7 +63,7 @@ export default function YoutubeBotPage() {
             {/* Connected Channel Card */}
             <div className="bg-card border border-border rounded-2xl p-8 flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-red-100 rounded-2xl flex flex-col items-center justify-center shrink-0 overflow-hidden border border-border">
+                <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-2xl flex flex-col items-center justify-center shrink-0 overflow-hidden border border-border mt-1">
                   {isFetchingChannel ? (
                     <Loader2 className="w-6 h-6 text-red-600 animate-spin" />
                   ) : channelInfo?.thumbnail || session.user?.image ? (
@@ -64,18 +73,22 @@ export default function YoutubeBotPage() {
                   )}
                 </div>
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-lg text-foreground tracking-tight">
-                      {isFetchingChannel ? "Fetching Channel..." : channelInfo?.title || session.user?.name || "Connected Account"}
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-extrabold text-xl text-foreground tracking-tight">
+                      {isFetchingChannel 
+                        ? "Fetching Channel..." 
+                        : channelInfo?.title 
+                          ? channelInfo.title 
+                          : fetchError ? `Error: ${fetchError}` : (session.user?.name ? `${session.user.name}'s Channel` : "YouTube Channel")}
                     </span>
-                    {channelInfo && <div className="w-2 h-2 rounded-full bg-emerald-500"></div>}
+                    {channelInfo && <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1"></div>}
                   </div>
                   {channelInfo ? (
-                    <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none mt-1">
-                      <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {new Intl.NumberFormat().format(channelInfo.subscriberCount)} Subscribers</span>
+                    <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground uppercase tracking-widest leading-none">
+                      <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {new Intl.NumberFormat().format(channelInfo.subscriberCount)} Subscribers</span>
                     </div>
                   ) : (
-                    <span className="text-xs font-semibold text-muted-foreground">{session.user?.email}</span>
+                    <span className="text-sm font-semibold text-muted-foreground">Connected via: {session.user?.email}</span>
                   )}
                 </div>
               </div>
