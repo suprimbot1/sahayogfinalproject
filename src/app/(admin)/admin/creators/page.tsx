@@ -18,9 +18,9 @@ export default async function AdminUsersPage() {
       // Fetch the actual Youtube/Google name from NextAuth's 'users' collection
       let youtubeName = profile.username;
       try {
-        const db = mongoose.connection.db;
-        if (db) {
-          const userDoc = await db.collection("users").findOne({
+        const connection = mongoose.connection;
+        if (connection && connection.db) {
+          const userDoc = await connection.db.collection("users").findOne({
             _id: new mongoose.Types.ObjectId(profile.userId)
           });
           if (userDoc?.name) {
@@ -28,7 +28,7 @@ export default async function AdminUsersPage() {
           }
         }
       } catch (e) {
-        console.error("Failed to fetch user doc for profile", profile.userId);
+        console.error("Failed to fetch user doc for profile:", profile.userId, e);
       }
       return { ...profile, youtubeName };
     })
