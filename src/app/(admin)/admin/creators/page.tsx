@@ -3,7 +3,8 @@ import dbConnect from "@/lib/mongoose";
 import UserProfile from "@/models/UserProfile";
 import Link from "next/link";
 import { ExternalLink, ShieldCheck } from "lucide-react";
-import mongoose from "mongoose";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export default async function AdminUsersPage() {
   await dbConnect();
@@ -18,14 +19,13 @@ export default async function AdminUsersPage() {
       // Fetch the actual Youtube/Google name from NextAuth's 'users' collection
       let youtubeName = profile.username;
       try {
-        const connection = mongoose.connection;
-        if (connection && connection.db) {
-          const userDoc = await connection.db.collection("users").findOne({
-            _id: new mongoose.Types.ObjectId(profile.userId)
-          });
-          if (userDoc?.name) {
-            youtubeName = userDoc.name;
-          }
+        const client = await clientPromise;
+        const db = client.db();
+        const userDoc = await db.collection("users").findOne({
+          _id: new ObjectId(profile.userId)
+        });
+        if (userDoc?.name) {
+          youtubeName = userDoc.name as string;
         }
       } catch (e) {
         console.error("Failed to fetch user doc for profile:", profile.userId, e);
