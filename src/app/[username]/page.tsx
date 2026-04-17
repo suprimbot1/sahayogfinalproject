@@ -3,6 +3,8 @@ import dbConnect from "@/lib/mongoose";
 import UserProfile from "@/models/UserProfile";
 import Link from "next/link";
 import { PublicTipClient } from "@/components/public/PublicTipClient";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export default async function PublicPage(props: { 
   params: Promise<{ username: string }> 
@@ -22,6 +24,21 @@ export default async function PublicPage(props: {
 
   if (!profile) {
     notFound();
+  }
+
+  // Fetch the actual Youtube/Google name from NextAuth's 'users' collection
+  let youtubeName = profile.username;
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const userDoc = await db.collection("users").findOne({
+      _id: new ObjectId(profile.userId)
+    });
+    if (userDoc?.name) {
+      youtubeName = userDoc.name as string;
+    }
+  } catch (e) {
+    console.error("Failed to fetch user doc for profile", profile.userId);
   }
 
   // Convert the Mongoose document to a safe leaning JSON object to pass to Client Components
@@ -48,7 +65,7 @@ export default async function PublicPage(props: {
       {/* Main Container */}
       <main className="flex-1 w-full flex justify-center pb-20">
         <div className="w-full max-w-5xl px-4 xl:px-0">
-          <PublicTipClient profile={safeProfile} />
+          <PublicTipClient profile={safeProfile} youtubeName={youtubeName} />
         </div>
       </main>
     </div>

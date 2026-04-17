@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { IUserProfile } from "@/models/UserProfile";
 import { ChevronRight, ChevronLeft, Mail, Loader2 } from "lucide-react";
 
-export function PublicTipClient({ profile }: { profile: any }) {
+export function PublicTipClient({ profile, youtubeName }: { profile: any, youtubeName?: string }) {
   const [activeTab, setActiveTab] = useState("tips");
   const quickAmounts = [100, 300, 500, 1000, 1500, 2000, 2500, 5000];
   const [selectedAmount, setSelectedAmount] = useState(50);
@@ -18,7 +18,7 @@ export function PublicTipClient({ profile }: { profile: any }) {
   const [leaderboardPeriod, setLeaderboardPeriod] = useState("allTime");
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(false);
 
-  const displayUsername = profile?.username?.toUpperCase() || "CREATOR";
+  const displayUsername = youtubeName || profile?.username?.toUpperCase() || "CREATOR";
   const coverImage = profile?.coverImage || "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2070&auto=format&fit=crop";
   const profileImage = profile?.profileImage || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780&auto=format&fit=crop";
 
