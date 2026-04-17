@@ -18,11 +18,14 @@ export default async function AdminUsersPage() {
       // Fetch the actual Youtube/Google name from NextAuth's 'users' collection
       let youtubeName = profile.username;
       try {
-        const userDoc = await mongoose.connection.db.collection("users").findOne({
-          _id: new mongoose.Types.ObjectId(profile.userId)
-        });
-        if (userDoc?.name) {
-          youtubeName = userDoc.name;
+        const db = mongoose.connection.db;
+        if (db) {
+          const userDoc = await db.collection("users").findOne({
+            _id: new mongoose.Types.ObjectId(profile.userId)
+          });
+          if (userDoc?.name) {
+            youtubeName = userDoc.name;
+          }
         }
       } catch (e) {
         console.error("Failed to fetch user doc for profile", profile.userId);
