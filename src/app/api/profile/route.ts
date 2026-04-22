@@ -34,21 +34,11 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Find the profile, or create a default one if it doesn't exist
-    let profile = await UserProfile.findOne({ userId: session.user.id });
+    // Find the profile
+    const profile = await UserProfile.findOne({ userId: session.user.id });
 
     if (!profile) {
-      profile = await UserProfile.create({
-        userId: session.user.id,
-        username: generateUsername(session.user.email || ""),
-        settings: {
-          latestSupportersCount: 10,
-          minTipAmount: 50,
-          maxMessageLength: 99,
-          profanityFilterEnabled: false,
-          customBadWords: [],
-        },
-      });
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
     // Return the raw profile object for simplicity in the private dashboard
