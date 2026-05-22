@@ -6,6 +6,8 @@ import { PublicTipClient } from "@/components/public/PublicTipClient";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
+export const dynamic = "force-dynamic";
+
 export default async function PublicPage(props: { 
   params: Promise<{ username: string }> 
 }) {

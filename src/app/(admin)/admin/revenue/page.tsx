@@ -3,6 +3,8 @@ import dbConnect from "@/lib/mongoose";
 import Transaction from "@/models/Transaction";
 import { LineChart, Wallet } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminRevenuePage() {
   await dbConnect();
 

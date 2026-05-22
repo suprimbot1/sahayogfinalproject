@@ -4,6 +4,8 @@ import Payout from "@/models/Payout";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { PayoutActionButtons } from "@/components/admin/ActionButtons";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPayoutsPage() {
   await dbConnect();
 

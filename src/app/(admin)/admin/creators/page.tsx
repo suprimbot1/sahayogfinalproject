@@ -6,6 +6,8 @@ import { ExternalLink, ShieldCheck } from "lucide-react";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminUsersPage() {
   await dbConnect();
 

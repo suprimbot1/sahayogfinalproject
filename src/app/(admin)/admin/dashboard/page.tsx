@@ -5,6 +5,8 @@ import UserProfile from "@/models/UserProfile";
 import Transaction from "@/models/Transaction";
 import Payout from "@/models/Payout";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardOverview() {
   await dbConnect();
 
