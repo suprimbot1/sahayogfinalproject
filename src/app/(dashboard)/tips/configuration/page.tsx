@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Copy, Upload, Trash2, Loader2, Save, ExternalLink, PlusCircle, Globe, MonitorPlay as Youtube, Landmark } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/toast";
 
 export default function TipsConfigurationPage() {
   const { data: session, status } = useSession();
@@ -10,6 +11,7 @@ export default function TipsConfigurationPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [recentTips, setRecentTips] = useState<any[]>([]);
+  const { success, error, info } = useToast();
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -87,9 +89,9 @@ export default function TipsConfigurationPage() {
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      alert("Changes saved successfully!");
+      success("Changes saved successfully!");
     } catch (e: any) {
-      alert(e.message || "Failed to save changes.");
+      error(e.message || "Failed to save changes.");
     } finally {
       setIsSaving(false);
     }
@@ -107,7 +109,7 @@ export default function TipsConfigurationPage() {
         if (type === "profile") setFormData({ ...formData, profileImage: json.url });
       }
     } catch (e) {
-      alert("Upload failed.");
+      error("Upload failed.");
     }
   };
 
@@ -129,7 +131,7 @@ export default function TipsConfigurationPage() {
   const handleCopy = () => {
     const url = `${window.location.origin}/${formData.username}`;
     navigator.clipboard.writeText(url);
-    alert("URL Copied!");
+    info("URL Copied!", "Clipboard");
   };
 
   if (isLoading) {

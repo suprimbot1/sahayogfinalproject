@@ -13,7 +13,7 @@ export function LandingFooter() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                 <Play className="w-4 h-4 text-white fill-white ml-0.5 group-hover:scale-110 transition-transform" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-white">StreamCast</span>
+              <span className="font-bold text-xl tracking-tight text-white">Sahayog</span>
             </Link>
             <p className="text-slate-400 text-sm mb-6 max-w-xs">
               The easiest way to create professional live streams and recordings directly in your browser.
@@ -78,7 +78,7 @@ export function LandingFooter() {
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-slate-500 text-sm">
-            © {new Date().getFullYear()} StreamCast. All rights reserved.
+            © {new Date().getFullYear()} Sahayog. All rights reserved.
           </p>
         </div>
 

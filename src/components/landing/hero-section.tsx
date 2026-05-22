@@ -39,7 +39,7 @@ export function HeroSection() {
             <div className="relative w-full h-[120%] lg:h-[140%] top-0 lg:-top-16 -right-4 lg:-right-12">
                <Image 
                  src="/landing/hero_mockup_1776451266043.png" 
-                 alt="StreamCast Dashboard Mockup" 
+                 alt="Sahayog Dashboard Mockup" 
                  fill
                  className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-bottom-10 duration-1000"
                  priority

@@ -21,14 +21,21 @@ export default async function AdminUsersPage() {
       try {
         const client = await clientPromise;
         const db = client.db();
-        const userDoc = await db.collection("users").findOne({
-          _id: new ObjectId(profile.userId)
-        });
+        
+        // Safety check: Only attempt to create ObjectId if userId is a valid 24-char hex string
+        const isValidId = typeof profile.userId === 'string' && /^[0-9a-fA-F]{24}$/.test(profile.userId);
+        
+        const query = isValidId 
+          ? { _id: new ObjectId(profile.userId) } 
+          : { _id: profile.userId }; // Fallback for manual string IDs
+
+        const userDoc = await db.collection("users").findOne(query);
+        
         if (userDoc?.name) {
           youtubeName = userDoc.name as string;
         }
       } catch (e) {
-        console.error("Failed to fetch user doc for profile:", profile.userId, e);
+        console.error("Failed to fetch user doc for profile:", profile.userId);
       }
       return { ...profile, youtubeName };
     })

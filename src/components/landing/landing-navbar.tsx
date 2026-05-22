@@ -29,7 +29,7 @@ export function LandingNavbar() {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
             <Play className="w-4 h-4 text-white fill-white ml-0.5 group-hover:scale-110 transition-transform" />
           </div>
-          <span className="font-bold text-xl tracking-tight">StreamCast</span>
+          <span className="font-bold text-xl tracking-tight">Sahayog</span>
         </Link>
 
         {/* Desktop Nav */}

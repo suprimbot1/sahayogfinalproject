@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import { useToast } from "@/components/ui/toast";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5 mr-3">
@@ -16,17 +17,18 @@ const GoogleIcon = () => (
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { info } = useToast();
 
   const handleEmailSignup = (e: React.FormEvent) => {
     e.preventDefault();
     // Implementation for email sign up goes here
-    alert("Email signup is visual only in this layout until configured in auth.ts. Please use Google Login.");
+    info("Email signup is visual only in this layout until configured in auth.ts. Please use Google Login.", "Notice");
   };
 
   return (
     <div className="flex flex-col items-center">
       <div className="text-center mb-8">
-        <h1 className="text-[28px] font-extrabold tracking-tight mb-2 text-white">StreamCast</h1>
+        <h1 className="text-[28px] font-extrabold tracking-tight mb-2 text-white">Sahayog</h1>
         <p className="text-[17px] text-[#A1A1A6]">Create your account</p>
       </div>
 
@@ -53,7 +55,7 @@ export default function SignUpPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@streamcast.com"
+                placeholder="name@sahayog.app"
                 className="w-full h-12 bg-[#000000] border border-[#222] rounded-lg px-4 text-[15px] text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all font-medium"
                 required
                 suppressHydrationWarning
@@ -97,7 +99,7 @@ export default function SignUpPage() {
           By signing up, you agree to the <a href="#" className="hover:text-[#888] underline underline-offset-2">Terms of Service</a>.
         </p>
         <p className="text-[#666] text-[12px] leading-relaxed">
-          You also agree to receive emails from StreamCast.
+          You also agree to receive emails from Sahayog.
         </p>
       </div>
     </div>

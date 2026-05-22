@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Trash2, MonitorPlay as YoutubeIcon, HelpCircle, LogIn, Loader2, Users } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { useToast } from "@/components/ui/toast";
 
 export default function YoutubeBotPage() {
   const { data: session, status } = useSession();
@@ -11,6 +12,7 @@ export default function YoutubeBotPage() {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isResetting, setIsResetting] = useState(false);
+  const { success, error, info } = useToast();
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -121,11 +123,11 @@ export default function YoutubeBotPage() {
               <div className="flex items-center gap-4">
                 <button 
                   onClick={async () => {
-                    alert("Sending test alert...");
+                    info("Sending test alert...");
                     const res = await fetch("/api/youtube/test-alert", { method: "POST" });
                     const data = await res.json();
-                    if(data.success) alert("Sent successfully to your livestream!");
-                    else alert("Failed: " + data.error);
+                    if(data.success) success("Sent successfully to your livestream!");
+                    else error("Failed: " + data.error);
                   }}
                   className="bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold px-3 py-1.5 rounded-full transition-colors cursor-pointer"
                 >

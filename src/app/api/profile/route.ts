@@ -35,10 +35,17 @@ export async function GET(req: Request) {
     }
 
     // Find the profile
-    const profile = await UserProfile.findOne({ userId: session.user.id });
+    let profile = await UserProfile.findOne({ userId: session.user.id });
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      // Create a default profile for the new user automatically
+      profile = await UserProfile.create({
+        userId: session.user.id,
+        username: generateUsername(session.user.email || null),
+        profileImage: session.user.image,
+        bioLinks: [],
+        socialLinks: []
+      });
     }
 
     // Return the raw profile object for simplicity in the private dashboard

@@ -32,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return {
             id: "superadmin_1",
             name: "Super Admin",
-            email: "suprim@streamcast.app",
+            email: "suprim@sahayog.app",
             role: "SUPER_ADMIN",
           } as any;
         }

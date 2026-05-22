@@ -20,6 +20,7 @@ import {
   Zap,
   Share2
 } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 // Social Platform Mapping (Fixed for lucide-react 1.7.0)
 const SOCIAL_LIST = [
@@ -34,6 +35,7 @@ export default function LinkInBioPage() {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const { success, error, info } = useToast();
   
   // Link Editor State
   const [showAddForm, setShowAddForm] = useState(false);
@@ -64,7 +66,9 @@ export default function LinkInBioPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
-      if (res.ok) alert("Your Link-in-Bio has been updated! 🍹");
+      if (res.ok) success("Your Link-in-Bio has been updated! 🍹");
+    } catch (err) {
+      error("Failed to save profile changes.");
     } finally {
       setIsSaving(false);
     }
@@ -114,7 +118,7 @@ export default function LinkInBioPage() {
 
   if (isLoading) return <div className="p-12 flex justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#008d4a]" /></div>;
 
-  const publicUrl = `sahayog.host/${profile.username}`;
+  const publicUrl = `sahayog.host/${profile?.username || "loading"}`;
 
   return (
     <div className="flex flex-col gap-6 max-w-[1400px] mx-auto min-h-screen bg-background pb-20 px-4 md:px-10">
@@ -127,7 +131,7 @@ export default function LinkInBioPage() {
             <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
          </div>
          <div className="flex items-center gap-2">
-            <button onClick={() => { navigator.clipboard.writeText(publicUrl); alert("Copied Profile URL!"); }} className="p-2.5 bg-muted border border-border rounded-lg hover:bg-muted/80 transition-colors">
+            <button onClick={() => { navigator.clipboard.writeText(publicUrl); info("Copied Profile URL!", "Clipboard"); }} className="p-2.5 bg-muted border border-border rounded-lg hover:bg-muted/80 transition-colors">
                <Copy className="w-4 h-4 text-muted-foreground" />
             </button>
             <button onClick={() => window.open(`/links/${profile.username}`)} className="p-2.5 bg-muted border border-border rounded-lg hover:bg-muted/80 transition-colors">
@@ -147,13 +151,13 @@ export default function LinkInBioPage() {
            {/* Profile Block */}
            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
               <div className="w-32 h-32 rounded-full bg-[#f0fcf7] dark:bg-[#0F1E19] flex items-center justify-center text-[#008d4a] dark:text-[#23C973] text-5xl font-black border-4 border-background shadow-xl overflow-hidden shrink-0">
-                 {profile.profileImage ? (
+                  {profile?.profileImage ? (
                    <img src={profile.profileImage} className="w-full h-full object-cover" />
-                 ) : profile.username.charAt(0).toUpperCase()}
+                 ) : profile?.username?.charAt(0).toUpperCase() || "U"}
               </div>
               <div className="flex-1 flex flex-col gap-6 text-center sm:text-left w-full">
                  <div>
-                    <h2 className="text-3xl font-black text-foreground tracking-tighter">@{profile.username}</h2>
+                    <h2 className="text-3xl font-black text-foreground tracking-tighter">@{profile?.username || "username"}</h2>
                     <input 
                        type="text" 
                        value={profile.slogan || ""} 
@@ -274,15 +278,15 @@ export default function LinkInBioPage() {
 
                  {/* Dynamic Avatar */}
                  <div className="relative z-10 w-24 h-24 rounded-full bg-white border-4 border-white shadow-2xl flex flex-col items-center justify-center overflow-hidden">
-                    {profile.profileImage ? (
+                    {profile?.profileImage ? (
                       <img src={profile.profileImage} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-[#008d4a] text-4xl font-black">{profile.username.charAt(0).toUpperCase()}</span>
+                      <span className="text-[#008d4a] text-4xl font-black">{profile?.username?.charAt(0).toUpperCase() || "U"}</span>
                     )}
                  </div>
 
                  {/* Dynamic Name and Slogan */}
-                 <h3 className="relative z-10 text-2xl font-black text-[#bcfc01] tracking-tighter mt-6 mb-1">@{profile.username}</h3>
+                 <h3 className="relative z-10 text-2xl font-black text-[#bcfc01] tracking-tighter mt-6 mb-1">@{profile?.username || "username"}</h3>
                  <p className="relative z-10 text-[10px] text-white/50 font-bold uppercase tracking-[0.3em]">{profile.slogan || "Sahayog Platform"}</p>
                  
                  {/* Dynamic Social Icons in Preview */}

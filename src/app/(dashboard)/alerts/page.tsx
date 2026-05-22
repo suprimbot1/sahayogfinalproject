@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Copy, EyeOff, Upload, Volume2, Play, LayoutTemplate, Square, Loader2, Save, Send, Coins, CheckCircle2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/toast";
 
 export default function AlertsPage() {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("alertbox");
+  const { success, error, info } = useToast();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const soundInputRef = useRef<HTMLInputElement>(null);
@@ -74,9 +76,9 @@ export default function AlertsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      if (res.ok) alert("Alert Box settings saved successfully!");
+      if (res.ok) success("Alert Box settings saved successfully!");
     } catch (e) {
-      alert("Failed to save settings.");
+      error("Failed to save settings.");
     } finally {
       setIsSaving(false);
     }
@@ -93,7 +95,7 @@ export default function AlertsPage() {
         if (type === "sound") setFormData({ ...formData, media: { ...formData.media, soundUri: json.url } });
       }
     } catch (e) {
-       alert("Media upload failed.");
+       error("Media upload failed.");
     }
   };
 
@@ -109,9 +111,9 @@ export default function AlertsPage() {
           message: "This looks incredible! 🚀 Sahayog is the best!!",
         })
       });
-      alert("Test alert triggered! Check your OBS/Preview.");
+      success("Test alert triggered! Check your OBS/Preview.");
     } catch (err) {
-      alert("Failed to trigger test alert.");
+      error("Failed to trigger test alert.");
     }
   };
 
@@ -157,7 +159,7 @@ export default function AlertsPage() {
             <h2 className="text-sm font-black uppercase tracking-widest text-muted-foreground text-left">OBS Widget URL</h2>
             <div className="flex items-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm group">
                <span className="truncate flex-1 text-muted-foreground">{baseUrl}/overlay?username={username}</span>
-               <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay?username=${username}`); alert("URL Copied!"); }} className="w-4 h-4 ml-auto hover:text-primary cursor-pointer transition-colors" />
+               <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/overlay?username=${username}`); info("URL Copied!", "Clipboard"); }} className="w-4 h-4 ml-auto hover:text-primary cursor-pointer transition-colors" />
             </div>
             <button 
                onClick={() => window.open(`/overlay?username=${username}`, "Overlay", "width=1280,height=720")}

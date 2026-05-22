@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { IUserProfile } from "@/models/UserProfile";
 import { ChevronRight, ChevronLeft, Mail, Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 export function PublicTipClient({ profile, youtubeName }: { profile: any, youtubeName?: string }) {
   const [activeTab, setActiveTab] = useState("tips");
@@ -17,6 +18,7 @@ export function PublicTipClient({ profile, youtubeName }: { profile: any, youtub
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [leaderboardPeriod, setLeaderboardPeriod] = useState("allTime");
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(false);
+  const { success, error, warning, info } = useToast();
 
   const displayUsername = youtubeName || profile?.username?.toUpperCase() || "CREATOR";
   const coverImage = profile?.coverImage || "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2070&auto=format&fit=crop";
@@ -27,14 +29,14 @@ export function PublicTipClient({ profile, youtubeName }: { profile: any, youtub
     const params = new URLSearchParams(window.location.search);
     const status = params.get("payment");
     if (status === "success") {
-       alert("🎉 Thank you very much! Your tip was successfully processed via Khalti!");
+       success("🎉 Thank you very much! Your tip was successfully processed via Khalti!");
        // Clean the URL safely without reloading the page
        window.history.replaceState(null, "", window.location.pathname);
     } else if (status === "cancelled") {
-       alert("Payment cancelled.");
+       warning("Payment cancelled.");
        window.history.replaceState(null, "", window.location.pathname);
     } else if (status === "failed") {
-       alert("⚠️ Payment verification failed with gateway.");
+       error("⚠️ Payment verification failed with gateway.");
        window.history.replaceState(null, "", window.location.pathname);
     }
   }, []);
@@ -70,11 +72,11 @@ export function PublicTipClient({ profile, youtubeName }: { profile: any, youtub
 
   const handleTip = async () => {
     if (!termsAgreed) {
-      alert("Please agree to the Terms and Conditions first.");
+      warning("Please agree to the Terms and Conditions first.");
       return;
     }
     if (!supporterName.trim()) {
-      alert("Please enter a username so the creator knows who tipped!");
+      warning("Please enter a username so the creator knows who tipped!");
       return;
     }
 
@@ -98,10 +100,10 @@ export function PublicTipClient({ profile, youtubeName }: { profile: any, youtub
          // Redirect the user to Khalti's secure checkout portal
          window.location.href = json.payment_url;
       } else {
-         alert("Failed: " + json.error);
+         error("Failed: " + json.error);
       }
     } catch (e) {
-      alert("An error occurred trying to process tip.");
+      error("An error occurred trying to process tip.");
     } finally {
       setIsTipping(false);
     }

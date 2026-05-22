@@ -17,6 +17,7 @@ import {
   Settings2
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/toast";
 
 export default function PayoutPage() {
   const { data: session } = useSession();
@@ -24,6 +25,7 @@ export default function PayoutPage() {
   const [activeTab, setActiveTab] = useState("request"); // request | history
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { success, error, warning } = useToast();
   
   // Payout Stats
   const [stats, setStats] = useState({
@@ -79,11 +81,11 @@ export default function PayoutPage() {
 
   const handlePayoutRequest = async () => {
     if (amount > stats.currentBalance) {
-      alert("Insufficient balance!");
+      warning("Insufficient balance!", "Balance Error");
       return;
     }
     if (amount < 100) {
-      alert("Minimum payout is Rs. 100");
+      warning("Minimum payout is Rs. 100", "Amount Low");
       return;
     }
 
@@ -96,15 +98,15 @@ export default function PayoutPage() {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Payout request submitted successfully! 🍹");
+        success("Payout request submitted successfully! 🍹");
         setAmount(100);
         setRemarks("");
         fetchData(); // Refresh all balances and history
       } else {
-        alert(data.error);
+        error(data.error || "Something went wrong");
       }
     } catch (e) {
-      alert("Failed to submit request.");
+      error("Failed to submit request.");
     } finally {
       setIsSubmitting(false);
     }
@@ -112,7 +114,7 @@ export default function PayoutPage() {
 
   const handleSavePayoutMethod = async () => {
     if (!setupData.accountName || !setupData.accountNumber) {
-        alert("Please fill all fields.");
+        warning("Please fill all fields.");
         return;
     }
     setIsSubmitting(true);
@@ -131,14 +133,14 @@ export default function PayoutPage() {
         });
         const data = await res.json();
         if (data.success) {
-            alert("Payout method linked successfully! ✨");
+            success("Payout method linked successfully! ✨");
             setIsSettingUp(false);
             fetchData();
         } else {
-            alert(data.error);
+            error(data.error || "Failed to link method");
         }
     } catch (e) {
-        alert("Failed to save payout method.");
+        error("Failed to save payout method.");
     } finally {
         setIsSubmitting(false);
     }

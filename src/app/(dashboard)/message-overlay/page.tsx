@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import { Copy, EyeOff, Loader2, Send } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/toast";
 
 export default function MessageOverlayPage() {
   const { status } = useSession();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const { success, error, info } = useToast();
   
   const [baseUrl, setBaseUrl] = useState("http://localhost:3000");
   const [username, setUsername] = useState("");
@@ -77,9 +79,9 @@ export default function MessageOverlayPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      if (res.ok) alert("Message Overlay settings saved successfully!");
+      if (res.ok) success("Message Overlay settings saved successfully!");
     } catch (e) {
-      alert("Failed to save settings.");
+      error("Failed to save settings.");
     } finally {
       setIsSaving(false);
     }
@@ -98,9 +100,9 @@ export default function MessageOverlayPage() {
           message: "Testing the Message Overlay!",
         })
       });
-      alert("Test message sent!");
+      success("Test message sent!");
      } catch (err) {
-       alert("Failed to send test message.");
+       error("Failed to send test message.");
      }
   };
 
@@ -118,7 +120,7 @@ export default function MessageOverlayPage() {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 flex items-center gap-2 bg-background border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground w-full">
             <span className="truncate flex-1 tracking-tight">{baseUrl}/live-message?username={username || "YOUR_NAME"}</span>
-            <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/live-message?username=${username}`); alert("Copied!"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
+            <Copy onClick={() => { navigator.clipboard.writeText(`${baseUrl}/live-message?username=${username}`); info("Copied!", "Clipboard"); }} className="w-4 h-4 ml-auto hover:text-foreground cursor-pointer shrink-0" />
             <EyeOff className="w-4 h-4 hover:text-foreground cursor-pointer shrink-0 ml-1" />
           </div>
           <button onClick={handleTestOverlay} className="bg-white border border-border hover:bg-muted text-foreground font-bold px-6 py-2.5 rounded-full whitespace-nowrap transition-colors">

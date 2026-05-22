@@ -45,7 +45,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center">
       <div className="text-center mb-8">
-        <h1 className="text-[28px] font-extrabold tracking-tight mb-2 text-white">StreamCast</h1>
+        <h1 className="text-[28px] font-extrabold tracking-tight mb-2 text-white">Sahayog</h1>
         <p className="text-[17px] text-[#A1A1A6]">Log in to your account</p>
       </div>
 
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
         <div className="mt-8 text-center">
           <p className="text-[14px] text-[#A1A1A6]">
-            New to StreamCast?{" "}
+            New to Sahayog?{" "}
             <Link href="/signup" className="text-white hover:underline decoration-[#696CFF] underline-offset-4 font-medium transition-colors">
               Sign up
             </Link>

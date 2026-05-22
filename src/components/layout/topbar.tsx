@@ -42,7 +42,19 @@ export function Topbar() {
           >
           <div className="w-10 h-10 rounded-full overflow-hidden border border-border bg-slate-100 flex items-center justify-center shrink-0">
             {user.image ? (
-              <img src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+              <img 
+                src={user.image} 
+                alt={user.name || "User"} 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  (e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-indigo-500', 'to-purple-600');
+                  const initial = document.createElement('span');
+                  initial.innerText = user.name?.charAt(0) || "U";
+                  initial.className = "text-white font-bold text-sm";
+                  (e.target as HTMLImageElement).parentElement!.appendChild(initial);
+                }}
+              />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
                 {user.name?.charAt(0) || "U"}
@@ -66,9 +78,21 @@ export function Topbar() {
 
             {/* User Header */}
             <div className="px-5 py-4 flex items-center gap-4 border-b border-border mb-2">
-              <div className="w-12 h-12 rounded-full overflow-hidden border border-border shrink-0">
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-border shrink-0 flex items-center justify-center">
                 {user.image ? (
-                  <img src={user.image} alt={user.name || "User"} className="w-full h-full object-cover" />
+                  <img 
+                    src={user.image} 
+                    alt={user.name || "User"} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).parentElement!.classList.add('bg-muted');
+                      const initial = document.createElement('span');
+                      initial.innerText = user.name?.charAt(0) || "U";
+                      initial.className = "text-muted-foreground font-bold";
+                      (e.target as HTMLImageElement).parentElement!.appendChild(initial);
+                    }}
+                  />
                 ) : (
                   <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground font-bold">
                     {user.name?.charAt(0)}
