@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import dbConnect from "@/lib/mongoose";
+import Upload from "@/models/Upload";
 import fs from "fs/promises";
 import path from "path";
 
@@ -24,14 +26,27 @@ export async function POST(req: Request) {
     const ext = path.extname(file.name) || ".png";
     const filename = `${session.user.id}_${Date.now()}${ext}`;
 
-    const uploadsDir = path.join(process.cwd(), "public/uploads");
-    const filepath = path.join(uploadsDir, filename);
+    // 1. Store raw binary data in MongoDB
+    await dbConnect();
+    await Upload.create({
+      filename,
+      contentType: file.type || "application/octet-stream",
+      data: buffer,
+      size: file.size,
+    });
 
-    // Write file directly to public directory
-    await fs.writeFile(filepath, buffer);
+    // 2. Safely attempt local filesystem write (non-blocking fallback for localhost cache)
+    try {
+      const uploadsDir = path.join(process.cwd(), "public/uploads");
+      await fs.mkdir(uploadsDir, { recursive: true });
+      const filepath = path.join(uploadsDir, filename);
+      await fs.writeFile(filepath, buffer);
+    } catch (fsErr) {
+      console.warn("FS write bypassed (read-only environment like Vercel):", fsErr);
+    }
 
-    // Return the relative URL which Next.js serves publicly
-    const fileUrl = `/uploads/${filename}`;
+    // Return the relative URL served by our dynamic route
+    const fileUrl = `/api/uploads/${filename}`;
     
     return NextResponse.json({ success: true, url: fileUrl });
   } catch (error) {
@@ -39,3 +54,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to upload file." }, { status: 500 });
   }
 }
+
